@@ -1,0 +1,42 @@
+{
+  "name": "eslint-plugin-dci",
+  "version": "0.1.0",
+  "description": "Helps you adhere to DCI conventions.",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin"
+  ],
+  "author": "Andreas Söderlund",
+  "main": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"pnpm --dir E:/Projects/TEST/eslint-testp lint\"",
+    "lint": "eslint .",
+    "test": "mocha tests --recursive"
+  },
+  "dependencies": {
+    "requireindex": "^1.2.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node16-strictest": "^1.0.4",
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/node": "^18.11.0",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "@typescript-eslint/utils": "^5.40.1",
+    "eslint": "^8.25.0",
+    "eslint-plugin-eslint-plugin": "^5.0.0",
+    "eslint-plugin-node": "^11.1.0",
+    "mocha": "^10.0.0",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": "^14.17.0 || ^16.0.0 || >= 18.0.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=7"
+  },
+  "license": "ISC"
+}
