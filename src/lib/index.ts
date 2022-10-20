@@ -12,6 +12,7 @@ const rules: Array<[string, "error" | "warn"]> = [
   ["literal-role-contracts", "error"],
   ["ordered-rolemethods", "error"],
   ["private-rolemethods", "error"],
+  ["uppercase-roles", "warn"],
 ];
 
 const importedRules = rules.map((rule) => [

@@ -2,7 +2,10 @@ import { ESLintUtils } from "@typescript-eslint/utils";
 import type { RuleListener } from "@typescript-eslint/utils/dist/ts-eslint";
 import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 import type { RuleContext } from "@typescript-eslint/utils/dist/ts-eslint";
-import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
+import {
+  AST_NODE_TYPES,
+  Identifier,
+} from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export const createRule = ESLintUtils.RuleCreator(
   (name) => `https://example.com/rule/${name}`
@@ -28,23 +31,42 @@ const isContextRegexp = /\W*@context\b/i;
 
 class Context {
   readonly func: FunctionDeclaration;
-  readonly roles = new Map<string, RoleMethod[]>();
+  readonly roles = new Map<string, { id: Identifier; methods: RoleMethod[] }>();
   private funcMap = new Map<FunctionDeclaration, RoleMethod>();
 
-  constructor(func: FunctionDeclaration) {
+  constructor(context: RuleContext<any, any>, func: FunctionDeclaration) {
     this.func = func;
+    const statements = func.body.body;
 
-    const functions = func.body.body.filter(
+    const potentialRoles = new Map(
+      (
+        func.params.filter(
+          (p) => p.type == AST_NODE_TYPES.Identifier
+        ) as Identifier[]
+      ).map((i) => [i.name, i])
+    );
+
+    for (const s of statements) {
+      if (
+        s.type == AST_NODE_TYPES.VariableDeclaration &&
+        s.declarations.length == 1 &&
+        s.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
+        s.declarations[0]?.id.type == AST_NODE_TYPES.Identifier
+      ) {
+        const declaration = s.declarations[0].id;
+        potentialRoles.set(declaration.name, declaration);
+      }
+    }
+
+    //console.log(potentialRoles.keys());
+
+    const functions = statements.filter(
       (n) => n.type == AST_NODE_TYPES.FunctionDeclaration
     ) as FunctionDeclaration[];
 
     for (const func of functions) {
       const rm = this.roleMethodCall(func.id?.name);
       if (!rm) continue;
-
-      if (!this.roles.has(rm.role)) {
-        this.roles.set(rm.role, []);
-      }
 
       const contextRm = {
         role: rm.role,
@@ -53,8 +75,22 @@ class Context {
         func,
       };
 
-      this.roles.get(rm.role)?.push(contextRm);
-      this.funcMap.set(func, contextRm);
+      if (!this.roles.has(rm.role)) {
+        if (potentialRoles.has(rm.role)) {
+          this.roles.set(rm.role, {
+            id: potentialRoles.get(rm.role) as Identifier,
+            methods: [contextRm],
+          });
+        } else {
+          context.report({
+            node: func,
+            message: `Role "${rm.role}" not found for RoleMethod "${rm.method}"`,
+          } as never);
+        }
+      } else {
+        this.roles.get(rm.role)?.methods?.push(contextRm);
+        this.funcMap.set(func, contextRm);
+      }
     }
   }
 
@@ -81,12 +117,13 @@ class Context {
 let _currentContext: Context | null = null;
 let _currentFunction: FunctionDeclaration | null = null;
 
-export const currentContext = () => _currentContext;
+const currentContext = () => _currentContext;
+
 export const currentFunction = () => _currentFunction;
 
 export const isInContext = () => currentContext();
 export const isContext = (func: FunctionDeclaration) =>
-  func && currentContext()?.func === func;
+  func && currentContext()?.func === func ? currentContext() : null;
 
 export const contextRules = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,7 +151,7 @@ export const contextRules = (
 
       if (comments.match(isContextRegexp)) {
         //console.log("Entering Context " + func.id?.name);
-        _currentContext = new Context(func);
+        _currentContext = new Context(context, func);
       }
     }
   };

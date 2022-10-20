@@ -1,16 +1,11 @@
 import {
   createRule,
   contextRules,
-  currentContext,
+  isInContext,
   currentFunction,
   RoleMethodCall,
 } from "../DCIRuleHelpers";
-import type {
-  //FunctionDeclaration,
-  //CallExpression,
-  //Node,
-  MemberExpression,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
+import type { MemberExpression } from "@typescript-eslint/types/dist/generated/ast-spec";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
@@ -18,7 +13,7 @@ export default createRule({
   create(context) {
     return contextRules(context, {
       CallExpression(callExpr) {
-        const dciContext = currentContext();
+        const dciContext = isInContext();
         if (!dciContext) return;
 
         const currentFunc = currentFunction();

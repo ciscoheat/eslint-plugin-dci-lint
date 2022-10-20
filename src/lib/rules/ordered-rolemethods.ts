@@ -1,4 +1,4 @@
-import { createRule, contextRules, currentContext } from "../DCIRuleHelpers";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
@@ -6,8 +6,8 @@ export default createRule({
   create(context) {
     return contextRules(context, {
       FunctionDeclaration(node) {
-        const dciContext = currentContext();
-        if (!dciContext || dciContext.func != node) return;
+        const dciContext = isContext(node);
+        if (!dciContext) return;
 
         const nodes = node.body.body;
 
