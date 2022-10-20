@@ -1,4 +1,4 @@
-import { createRule, contextRules, isInContext } from "../DCIRuleHelpers";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import type {
   Identifier,
   FunctionDeclaration,
@@ -16,7 +16,8 @@ export default createRule({
   create(context) {
     return contextRules(context, {
       FunctionDeclaration(node: FunctionDeclaration) {
-        if (!isInContext(context)) return;
+        if (!isContext(node)) return;
+
         for (const param of node.params as Identifier[])
           if (
             !allowedLiteralTypes.includes(

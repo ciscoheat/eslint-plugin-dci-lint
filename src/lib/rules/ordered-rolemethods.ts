@@ -1,11 +1,4 @@
-import {
-  createRule,
-  contextRules,
-  isContext,
-  roleMethod,
-  RoleMethodCall,
-} from "../DCIRuleHelpers";
-import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
+import { createRule, contextRules, currentContext } from "../DCIRuleHelpers";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
@@ -13,38 +6,48 @@ export default createRule({
   create(context) {
     return contextRules(context, {
       FunctionDeclaration(node) {
-        if (!isContext(node)) return;
-        const functions = node.body.body.filter(
-          (n) => n.type == AST_NODE_TYPES.FunctionDeclaration
-        ) as FunctionDeclaration[];
+        const dciContext = currentContext();
+        if (!dciContext || dciContext.func != node) return;
+
+        const nodes = node.body.body;
 
         // TODO: Should only RoleMethod functions be allowed in top-level?
-        let errors = false;
-        for (const node of functions) {
-          if (!node.id) {
-            context.report({
-              messageId: "noname",
-              node,
-            });
-            errors = true;
-          }
-        }
-        if (errors) return;
+        const roleMethods = new Map(
+          nodes.map((node) => [
+            node,
+            node.type == AST_NODE_TYPES.FunctionDeclaration
+              ? dciContext.roleMethodCall(node.id?.name)
+              : null,
+          ])
+        );
 
         const rolePos = new Set<string>();
-
         let currentRole = "";
-        for (const f of functions) {
-          const method = roleMethod(f.id?.name) as RoleMethodCall;
-          if (method.role != currentRole) {
-            if (rolePos.has(method.role)) {
-              context.report({
-                messageId: "unordered",
-                node: f,
-              });
-            } else {
-              rolePos.add(method.role);
-              currentRole = method.role;
+        let lastNode;
+
+        for (const [node, rm] of roleMethods) {
+          if (!rm) {
+            // A non-RoleMethod expression, cannot be placed between RoleMethods.
+            if (rolePos.size > 0) {
+              lastNode = node;
+            }
+          } else if (lastNode) {
+            context.report({
+              messageId: "mixed",
+              node: lastNode,
+            });
+            lastNode = null;
+          } else {
+            if (rm.role != currentRole) {
+              if (rolePos.has(rm.role)) {
+                context.report({
+                  messageId: "unordered",
+                  node,
+                });
+              } else {
+                rolePos.add(rm.role);
+                currentRole = rm.role;
+              }
             }
           }
         }
@@ -59,6 +62,8 @@ export default createRule({
     messages: {
       noname: "A RoleMethod must be a named function.",
       unordered: "RoleMethods belonging to a Role must be grouped together.",
+      mixed:
+        "Statements and expressions cannot be placed between RoleMethods, only before or after.",
     },
     type: "problem",
     schema: [],

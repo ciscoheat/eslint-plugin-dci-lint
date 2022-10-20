@@ -2,6 +2,7 @@ import { ESLintUtils } from "@typescript-eslint/utils";
 import type { RuleListener } from "@typescript-eslint/utils/dist/ts-eslint";
 import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 import type { RuleContext } from "@typescript-eslint/utils/dist/ts-eslint";
+import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export const createRule = ESLintUtils.RuleCreator(
   (name) => `https://example.com/rule/${name}`
@@ -16,63 +17,104 @@ export interface RoleMethodCall {
   isPrivate: boolean;
 }
 
+interface RoleMethod extends RoleMethodCall {
+  func: FunctionDeclaration;
+}
+
 const publicRoleSplitter = "_";
 const privateRoleSplitter = "__";
 
 const isContextRegexp = /\W*@context\b/i;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const contexts = new WeakMap<RuleContext<any, any>, FunctionDeclaration>();
-const currentContexts = new WeakSet<FunctionDeclaration>();
+class Context {
+  readonly func: FunctionDeclaration;
+  readonly roles = new Map<string, RoleMethod[]>();
+  private funcMap = new Map<FunctionDeclaration, RoleMethod>();
 
-export const isRoleMethod = (name: string | undefined) =>
-  name && name.includes(publicRoleSplitter);
+  constructor(func: FunctionDeclaration) {
+    this.func = func;
 
-export const roleMethod = (name: string | undefined): RoleMethodCall | null => {
-  if (!name || !isRoleMethod(name)) return null;
+    const functions = func.body.body.filter(
+      (n) => n.type == AST_NODE_TYPES.FunctionDeclaration
+    ) as FunctionDeclaration[];
 
-  const isPrivate = name.includes(privateRoleSplitter);
-  const parts = name.split(
-    isPrivate ? privateRoleSplitter : publicRoleSplitter
-  );
+    for (const func of functions) {
+      const rm = this.roleMethodCall(func.id?.name);
+      if (!rm) continue;
 
-  return { role: parts[0] as string, method: parts[1] as string, isPrivate };
-};
+      if (!this.roles.has(rm.role)) {
+        this.roles.set(rm.role, []);
+      }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isInContext = (context: RuleContext<any, any>) =>
-  contexts.has(context);
+      const contextRm = {
+        role: rm.role,
+        method: rm.method,
+        isPrivate: rm.isPrivate,
+        func,
+      };
 
-export const isContext = (node: FunctionDeclaration) =>
-  currentContexts.has(node);
+      this.roles.get(rm.role)?.push(contextRm);
+      this.funcMap.set(func, contextRm);
+    }
+  }
+
+  roleMethodFromFunc(func: FunctionDeclaration) {
+    return this.funcMap.get(func);
+  }
+
+  isRoleMethod(name: string | undefined) {
+    return name && name.includes(publicRoleSplitter);
+  }
+
+  roleMethodCall(name: string | undefined): RoleMethodCall | null {
+    if (!name || !this.isRoleMethod(name)) return null;
+
+    const isPrivate = name.includes(privateRoleSplitter);
+    const parts = name.split(
+      isPrivate ? privateRoleSplitter : publicRoleSplitter
+    );
+
+    return { role: parts[0] as string, method: parts[1] as string, isPrivate };
+  }
+}
+
+let _currentContext: Context | null = null;
+let _currentFunction: FunctionDeclaration | null = null;
+
+export const currentContext = () => _currentContext;
+export const currentFunction = () => _currentFunction;
+
+export const isInContext = () => currentContext();
+export const isContext = (func: FunctionDeclaration) =>
+  func && currentContext()?.func === func;
 
 export const contextRules = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   context: RuleContext<any, any>,
   rule: RuleListener
 ) => {
-  rule[" FunctionDeclaration:exit"] = (fun: FunctionDeclaration) => {
-    if (contexts.get(context) === fun) {
-      //console.log("Exiting Context " + fun?.id?.name);
-      contexts.delete(context);
-      currentContexts.delete(fun);
+  rule[" FunctionDeclaration:exit"] = (func: FunctionDeclaration) => {
+    _currentFunction = null;
+    if (currentContext()?.func === func) {
+      //console.log("Exiting Context " + func?.id?.name);
+      _currentContext = null;
     }
   };
 
-  rule[" FunctionDeclaration"] = (fun: FunctionDeclaration) => {
-    if (!contexts.has(context)) {
+  rule[" FunctionDeclaration"] = (func: FunctionDeclaration) => {
+    _currentFunction = func;
+    if (!currentContext()) {
       const source = context.getSourceCode();
 
       // TODO: Error if nested contexts (@context in comments on multiple ancestors)
-      const comments = [fun, ...context.getAncestors()]
+      const comments = [func, ...context.getAncestors()]
         .flatMap((n) => source.getCommentsBefore(n))
         .map((c) => c.value)
         .join(" ");
 
       if (comments.match(isContextRegexp)) {
-        contexts.set(context, fun);
-        currentContexts.add(fun);
-        //console.log("Entering Context " + fun.id?.name);
+        //console.log("Entering Context " + func.id?.name);
+        _currentContext = new Context(func);
       }
     }
   };
