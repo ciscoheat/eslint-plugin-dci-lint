@@ -20,13 +20,13 @@ const importedRules = rules.map((rule) => [
   require(`./rules/${rule[0]}`).default as typeof createRule,
 ]);
 
-const recommendedRules = rules.map((rule) => [`dci/${rule[0]}`, rule[1]]);
+const recommendedRules = rules.map((rule) => [`dci-lint/${rule[0]}`, rule[1]]);
 
 module.exports = {
   rules: Object.fromEntries(importedRules),
   configs: {
     recommended: {
-      plugins: ["dci"],
+      plugins: ["dci-lint"],
       rules: {
         "no-param-reassign": "error",
         ...Object.fromEntries(recommendedRules),

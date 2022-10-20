@@ -1,4 +1,4 @@
-# eslint-plugin-dci
+# eslint-plugin-dci-lint
 
 Helps you adhere to DCI conventions.
 
@@ -10,37 +10,22 @@ You'll first need to install [ESLint](https://eslint.org/):
 npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-dci`:
+Next, install `eslint-plugin-dci-lint`:
 
 ```sh
-npm install eslint-plugin-dci --save-dev
+npm install eslint-plugin-dci-lint --save-dev
 ```
 
 ## Usage
 
-Add `dci` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Add `dci-lint` to the extends section of your `.eslintrc` configuration file:
 
 ```json
 {
-    "plugins": [
-        "dci"
-    ]
-}
-```
-
-
-Then configure the rules you want to use under the rules section.
-
-```json
-{
-    "rules": {
-        "dci/rule-name": 2
-    }
+  "extends": ["plugin:dci-lint/recommended"]
 }
 ```
 
 ## Supported Rules
 
-* Fill in provided rules here
-
-
+- Fill in provided rules here

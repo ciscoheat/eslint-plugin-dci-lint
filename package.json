@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-dci",
+  "name": "eslint-plugin-dci-lint",
   "version": "0.1.0",
   "description": "Helps you adhere to DCI conventions.",
   "keywords": [
@@ -14,9 +14,6 @@
     "dev": "tsc-watch --onSuccess \"pnpm --dir E:/Projects/TEST/eslint-testp lint\"",
     "lint": "eslint .",
     "test": "mocha tests --recursive"
-  },
-  "dependencies": {
-    "requireindex": "^1.2.0"
   },
   "devDependencies": {
     "@tsconfig/node16-strictest": "^1.0.4",
