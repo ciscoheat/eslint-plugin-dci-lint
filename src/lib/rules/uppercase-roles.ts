@@ -21,11 +21,11 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: "A RoleMethod must be a named function.",
+      description: "A Role name should be uppercase.",
       recommended: "error",
     },
     messages: {
-      notUppercase: "A Role name should be uppercased.",
+      notUppercase: "A Role name should be uppercase.",
     },
     type: "problem",
     schema: [],
