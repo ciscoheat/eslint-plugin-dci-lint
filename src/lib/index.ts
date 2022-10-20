@@ -11,6 +11,7 @@ const rules: Array<[string, "error" | "warn"]> = [
   ["block-definition", "error"],
   ["literal-role-contracts", "error"],
   ["ordered-rolemethods", "error"],
+  ["private-rolemethods", "error"],
 ];
 
 const importedRules = rules.map((rule) => [

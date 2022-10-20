@@ -7,11 +7,37 @@ export const createRule = ESLintUtils.RuleCreator(
   (name) => `https://example.com/rule/${name}`
 );
 
+// TODO: Role name checking rule
+// TODO: Role splitting config setting
+
+export interface RoleMethodCall {
+  role: string;
+  method: string;
+  isPrivate: boolean;
+}
+
+const publicRoleSplitter = "_";
+const privateRoleSplitter = "__";
+
 const isContextRegexp = /\W*@context\b/i;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const contexts = new WeakMap<RuleContext<any, any>, FunctionDeclaration>();
 const currentContexts = new WeakSet<FunctionDeclaration>();
+
+export const isRoleMethod = (name: string | undefined) =>
+  name && name.includes(publicRoleSplitter);
+
+export const roleMethod = (name: string | undefined): RoleMethodCall | null => {
+  if (!name || !isRoleMethod(name)) return null;
+
+  const isPrivate = name.includes(privateRoleSplitter);
+  const parts = name.split(
+    isPrivate ? privateRoleSplitter : publicRoleSplitter
+  );
+
+  return { role: parts[0] as string, method: parts[1] as string, isPrivate };
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isInContext = (context: RuleContext<any, any>) =>

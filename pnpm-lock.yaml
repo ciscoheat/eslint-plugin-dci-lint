@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@tsconfig/node16-strictest': ^1.0.4
   '@tsconfig/recommended': ^1.0.1
+  '@types/esquery': ^1.0.2
   '@types/node': ^18.11.0
   '@typescript-eslint/eslint-plugin': ^5.40.1
   '@typescript-eslint/parser': ^5.40.1
@@ -10,6 +11,7 @@ specifiers:
   eslint: ^8.25.0
   eslint-plugin-eslint-plugin: ^5.0.0
   eslint-plugin-node: ^11.1.0
+  esquery: ^1.4.0
   mocha: ^10.0.0
   requireindex: ^1.2.0
   tsc-watch: ^5.0.3
@@ -21,6 +23,7 @@ dependencies:
 devDependencies:
   '@tsconfig/node16-strictest': 1.0.4
   '@tsconfig/recommended': 1.0.1
+  '@types/esquery': 1.0.2
   '@types/node': 18.11.0
   '@typescript-eslint/eslint-plugin': 5.40.1_ukgdydjtebaxmxfqp5v5ulh64y
   '@typescript-eslint/parser': 5.40.1_z4bbprzjrhnsfa24uvmcbu7f5q
@@ -28,6 +31,7 @@ devDependencies:
   eslint: 8.25.0
   eslint-plugin-eslint-plugin: 5.0.6_eslint@8.25.0
   eslint-plugin-node: 11.1.0_eslint@8.25.0
+  esquery: 1.4.0
   mocha: 10.1.0
   tsc-watch: 5.0.3_typescript@4.8.4
   typescript: 4.8.4
@@ -98,6 +102,16 @@ packages:
 
   /@tsconfig/recommended/1.0.1:
     resolution: {integrity: sha512-2xN+iGTbPBEzGSnVp/Hd64vKJCJWxsi9gfs88x4PPMyEjHJoA3o5BY9r5OLPHIZU2pAQxkSAsJFqn6itClP8mQ==}
+    dev: true
+
+  /@types/esquery/1.0.2:
+    resolution: {integrity: sha512-qeAoHiWfqF4ST6An3DM2r1743bWL7B5hW4oNR9tWkdOjFUR1aK2j0jnYvW6h30VGDeXQ+1bWOYTej4JVo/5+PA==}
+    dependencies:
+      '@types/estree': 1.0.0
+    dev: true
+
+  /@types/estree/1.0.0:
+    resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
   /@types/json-schema/7.0.11:

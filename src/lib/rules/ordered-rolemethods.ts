@@ -1,4 +1,10 @@
-import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
+import {
+  createRule,
+  contextRules,
+  isContext,
+  roleMethod,
+  RoleMethodCall,
+} from "../DCIRuleHelpers";
 import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
@@ -29,18 +35,16 @@ export default createRule({
 
         let currentRole = "";
         for (const f of functions) {
-          // TODO: Role name checking rule
-          // TODO: Role splitting config setting
-          const role = f.id?.name.split("_")[0] ?? "";
-          if (role != currentRole) {
-            if (rolePos.has(role)) {
+          const method = roleMethod(f.id?.name) as RoleMethodCall;
+          if (method.role != currentRole) {
+            if (rolePos.has(method.role)) {
               context.report({
                 messageId: "unordered",
                 node: f,
               });
             } else {
-              rolePos.add(role);
-              currentRole = role;
+              rolePos.add(method.role);
+              currentRole = method.role;
             }
           }
         }
