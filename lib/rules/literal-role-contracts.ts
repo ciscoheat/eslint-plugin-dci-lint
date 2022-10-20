@@ -1,4 +1,4 @@
-import { createRule, checkForContext } from "../DCIRuleHelpers";
+import { createRule, contextRules, isInContext } from "../DCIRuleHelpers";
 import type {
   Identifier,
   FunctionDeclaration,
@@ -14,8 +14,9 @@ const allowedLiteralTypes = [
 export default createRule({
   name: "literal-role-contracts",
   create(context) {
-    return checkForContext(context, {
+    return contextRules(context, {
       FunctionDeclaration(node: FunctionDeclaration) {
+        if (!isInContext(context)) return;
         for (const param of node.params as Identifier[])
           if (
             !allowedLiteralTypes.includes(

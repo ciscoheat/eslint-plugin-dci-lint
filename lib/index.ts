@@ -23,7 +23,10 @@ module.exports = {
   configs: {
     recommended: {
       plugins: ["dci"],
-      rules: Object.fromEntries(recommendedRules),
+      rules: {
+        "no-param-reassign": "error",
+        ...Object.fromEntries(recommendedRules),
+      },
     },
   },
 };

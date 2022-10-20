@@ -16,7 +16,7 @@ const contexts = new WeakMap<RuleContext<any, any>, FunctionDeclaration>();
 export const isInContext = (context: RuleContext<any, any>) =>
   contexts.has(context);
 
-export const checkForContext = (
+export const contextRules = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   context: RuleContext<any, any>,
   rule: RuleListener
@@ -35,6 +35,7 @@ export const checkForContext = (
         .flatMap((n) => source.getCommentsBefore(n))
         .map((c) => c.value)
         .join(" ");
+
       if (comments.match(isContextRegexp)) {
         contexts.set(context, fun);
         console.log("entering " + fun.id?.name);
