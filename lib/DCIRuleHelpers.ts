@@ -11,10 +11,14 @@ const isContextRegexp = /\W*@context\b/i;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const contexts = new WeakMap<RuleContext<any, any>, FunctionDeclaration>();
+const currentContexts = new WeakSet<FunctionDeclaration>();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isInContext = (context: RuleContext<any, any>) =>
   contexts.has(context);
+
+export const isContext = (node: FunctionDeclaration) =>
+  currentContexts.has(node);
 
 export const contextRules = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,14 +27,17 @@ export const contextRules = (
 ) => {
   rule[" FunctionDeclaration:exit"] = (fun: FunctionDeclaration) => {
     if (contexts.get(context) === fun) {
-      console.log("exiting " + fun?.id?.name);
+      //console.log("Exiting Context " + fun?.id?.name);
       contexts.delete(context);
+      currentContexts.delete(fun);
     }
   };
 
   rule[" FunctionDeclaration"] = (fun: FunctionDeclaration) => {
     if (!contexts.has(context)) {
       const source = context.getSourceCode();
+
+      // TODO: Error if nested contexts (@context in comments on multiple ancestors)
       const comments = [fun, ...context.getAncestors()]
         .flatMap((n) => source.getCommentsBefore(n))
         .map((c) => c.value)
@@ -38,7 +45,8 @@ export const contextRules = (
 
       if (comments.match(isContextRegexp)) {
         contexts.set(context, fun);
-        console.log("entering " + fun.id?.name);
+        currentContexts.add(fun);
+        //console.log("Entering Context " + fun.id?.name);
       }
     }
   };
