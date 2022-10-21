@@ -1,6 +1,6 @@
 # eslint-plugin-dci-lint
 
-A typescript ESLint plugin that helps you adhere to DCI conventions. For more information about the DCI (Data, Context and Interaction) paradigm, see [https://fulloo.info](https://fulloo.info).
+A typescript ESLint plugin that helps you adhere to DCI conventions. For more information about DCI (Data, Context and Interaction), see [https://fulloo.info](https://fulloo.info).
 
 ## Installation
 
@@ -43,11 +43,11 @@ In the project directory, you can run ESLint with `npx eslint .` but the recomme
 
 ### Errors
 
-These rules should not be turned off.
+These rules should not be turned off. [Let me know](https://github.com/ciscoheat/eslint-plugin-dci-lint/issues) if you have a good reason to do so.
 
-- `dci-lint/atomic-role-binding` - All RoleMethods must be bound (reassigned) in the same function. Not used if `dci-lint/immutable-roles` is enabled.
+- `dci-lint/atomic-role-binding` - All RoleMethods must be bound (assigned) in the same function. Not applicable if `dci-lint/immutable-roles` is enabled.
 - `dci-lint/grouped-rolemethods` - RoleMethods must be grouped together, without unrelated code between them.
-- `dci-lint/literal-role-contracts` - Role contracts can only be defined as literal objects, primitive types or arrays.
+- `dci-lint/literal-role-contracts` - Role contracts can only be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax).
 - `dci-lint/no-this-in-context` - Disallows `this` in Contexts.
 - `dci-lint/private-role-access` - Private RoleMethods and Role contracts can only be accessed within their own Roles.
 
@@ -56,4 +56,14 @@ These rules should not be turned off.
 These rules are optional, but only turn them off if you have a good reason.
 
 - `dci-lint/immutable-roles` - Prevents reassigning of Roles. Can be turned off if you don't assign Roles directly in the Context parameters, instead binding (assigning) them elsewhere in the Context.
-- `dci-lint/uppercase-roles` - Roles must be uppercased. Can be turned off if you think it looks horrendous, but it's rather useful to quickly identify Roles, like in a movie script.
+- `dci-lint/uppercase-roles` - Roles must be uppercased. Can be turned off if you think it looks horrendous, but it's rather useful to quickly identify Roles, like in a movie script. Try it first. :)
+
+## Tutorials
+
+Will soon follow. In the meantime, dive into [fulloo.info](https://fulloo.info/) and its extensive documentation. The [trygve manual](https://fulloo.info/Documents/trygve/trygve1.html) is a worthwhile read for any programmer regardless of skill level.
+
+## Comments, ideas, issues
+
+Are best expressed as a Github issue [here](https://github.com/ciscoheat/eslint-plugin-dci-lint/issues)!
+
+As always, a big thanks to Trygve Reenskaug and James Coplien for inventing and continously improving on DCI over the years.
