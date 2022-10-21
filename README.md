@@ -1,30 +1,43 @@
 # eslint-plugin-dci-lint
 
-Helps you adhere to DCI conventions. For more information about the DCI (Data, Context and Interaction) paradigm, see [https://fulloo.info](https://fulloo.info).
+A typescript ESLint plugin that helps you adhere to DCI conventions. For more information about the DCI (Data, Context and Interaction) paradigm, see [https://fulloo.info](https://fulloo.info).
 
 ## Installation
 
-You'll first need to install [ESLint](https://eslint.org/):
+You'll first need to install [ESLint](https://eslint.org/) and the required typescript packages:
 
 ```sh
-npm i eslint --save-dev
+npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
 ```
 
 Next, install `eslint-plugin-dci-lint`:
 
 ```sh
-npm install eslint-plugin-dci-lint --save-dev
+npm i --save-dev eslint-plugin-dci-lint
 ```
 
-## Usage
+## Configuration
 
-Add `dci-lint` to the extends section of your `.eslintrc` configuration file:
+Add `dci-lint` and the typescript parser to the extends section of your `.eslintrc` configuration file:
 
-```json
-{
-  "extends": ["plugin:dci-lint/recommended"]
-}
+**.eslintrc.cjs**
+
+```js
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended'
+    'plugin:dci-lint/recommended'
+  ],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  root: true,
+};
 ```
+
+## Running
+
+In the project directory, you can run ESLint with `npx eslint .` but the recommended way is to use it with a code editor, for example [VS Code](https://code.visualstudio.com/). This [extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
 
 ## Supported Rules
 
