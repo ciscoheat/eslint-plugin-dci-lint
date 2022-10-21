@@ -50,11 +50,10 @@ These rules should not be turned off.
 - `dci-lint/literal-role-contracts` - Role contracts can only be defined as literal objects, primitive types or arrays.
 - `dci-lint/no-this-in-context` - Disallows `this` in Contexts.
 - `dci-lint/private-role-access` - Private RoleMethods and Role contracts can only be accessed within their own Roles.
-- `no-param-reassign` - From the [ESLint ruleset](https://eslint.org/docs/latest/rules/no-param-reassign). Prevents reassigning of Roles inside the Context.
 
 ### Warnings
 
-These rules can be turned off.
+These rules are optional, but only turn them off if you have a good reason.
 
-- `dci-lint/immutable-roles` - Prevents reassigning of Roles.
-- `dci-lint/uppercase-roles` - Roles must be uppercased.
+- `dci-lint/immutable-roles` - Prevents reassigning of Roles. Can be turned off if you don't assign Roles directly in the Context parameters, instead binding (assigning) them elsewhere in the Context.
+- `dci-lint/uppercase-roles` - Roles must be uppercased. Can be turned off if you think it looks horrendous, but it's rather useful to quickly identify Roles, like in a movie script.
