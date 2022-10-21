@@ -2,7 +2,7 @@ import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
-  name: "ordered-rolemethods",
+  name: "grouped-rolemethods",
   create(context) {
     return contextRules(context, {
       FunctionDeclaration(node) {
@@ -56,12 +56,13 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: "A RoleMethod must be a named function.",
+      description:
+        "RoleMethods belonging to a Role must come after one another, they cannot be mixed with other Role's methods.",
       recommended: "error",
     },
     messages: {
-      noname: "A RoleMethod must be a named function.",
-      unordered: "RoleMethods belonging to a Role must be grouped together.",
+      unordered:
+        "RoleMethods belonging to a Role must come after one another, they cannot be mixed with other Role's methods.",
       mixed:
         "Statements and expressions cannot be placed between RoleMethods, only before or after.",
     },

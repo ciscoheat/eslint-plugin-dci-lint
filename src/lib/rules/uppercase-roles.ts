@@ -21,13 +21,15 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: "A Role name should be uppercase.",
-      recommended: "error",
+      description:
+        "A Role name should be uppercase, to make it easy to identity in the code.",
+      recommended: "warn",
     },
     messages: {
-      notUppercase: "A Role name should be uppercase.",
+      notUppercase:
+        "A Role name should be uppercase, to make it easy to identity in the code.",
     },
-    type: "problem",
+    type: "suggestion",
     schema: [],
   },
   defaultOptions: [],

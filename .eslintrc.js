@@ -16,7 +16,8 @@ module.exports = {
   rules: {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-var-requires": "off"
+    "@typescript-eslint/no-var-requires": "off",
+    //"dci-lint/no-this-in-context": "off"
   },
   overrides: [
     {
