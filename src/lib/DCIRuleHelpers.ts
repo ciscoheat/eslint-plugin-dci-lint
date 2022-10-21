@@ -24,19 +24,30 @@ interface RoleMethod extends RoleMethodCall {
   func: FunctionDeclaration;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GenericRuleContext = RuleContext<any, any>;
+
 const publicRoleSplitter = "_";
 const privateRoleSplitter = "__";
 
-const isContextRegexp = /\W*@context\b/i;
+const isContextRegexp = /\W*@DCI-context\b/i;
 
 class Context {
   readonly func: FunctionDeclaration;
   readonly roles = new Map<string, { id: Identifier; methods: RoleMethod[] }>();
   private funcMap = new Map<FunctionDeclaration, RoleMethod>();
 
-  constructor(context: RuleContext<any, any>, func: FunctionDeclaration) {
+  constructor(context: GenericRuleContext, func: FunctionDeclaration) {
     this.func = func;
-    const statements = func.body.body;
+
+    if (func.body.type != AST_NODE_TYPES.BlockStatement) {
+      context.report({
+        loc: func.body.loc,
+        message:
+          "A Context must be defined with a block statement (curly braces)",
+      } as never);
+      return;
+    }
 
     const potentialRoles = new Map(
       (
@@ -46,6 +57,9 @@ class Context {
       ).map((i) => [i.name, i])
     );
 
+    const statements = func.body.body;
+
+    // Check if a top-level statement exists as a potential Role.
     for (const s of statements) {
       if (
         s.type == AST_NODE_TYPES.VariableDeclaration &&
@@ -64,6 +78,7 @@ class Context {
       (n) => n.type == AST_NODE_TYPES.FunctionDeclaration
     ) as FunctionDeclaration[];
 
+    // Check if a function is a RoleMethod
     for (const func of functions) {
       const rm = this.roleMethodCall(func.id?.name);
       if (!rm) continue;
@@ -76,6 +91,7 @@ class Context {
       };
 
       if (!this.roles.has(rm.role)) {
+        // Check if a potential role exist, if so, add the Role.
         if (potentialRoles.has(rm.role)) {
           this.roles.set(rm.role, {
             id: potentialRoles.get(rm.role) as Identifier,
@@ -114,10 +130,10 @@ class Context {
   }
 }
 
-let _currentContext: Context | null = null;
+const _currentContext: Context[] = [];
 let _currentFunction: FunctionDeclaration | null = null;
 
-const currentContext = () => _currentContext;
+const currentContext = () => _currentContext[_currentContext.length - 1];
 
 export const currentFunction = () => _currentFunction;
 
@@ -126,33 +142,39 @@ export const isContext = (func: FunctionDeclaration) =>
   func && currentContext()?.func === func ? currentContext() : null;
 
 export const contextRules = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  context: RuleContext<any, any>,
+  context: GenericRuleContext,
   rule: RuleListener
 ) => {
   rule[" FunctionDeclaration:exit"] = (func: FunctionDeclaration) => {
     _currentFunction = null;
     if (currentContext()?.func === func) {
       //console.log("Exiting Context " + func?.id?.name);
-      _currentContext = null;
+      _currentContext.pop();
     }
   };
 
   rule[" FunctionDeclaration"] = (func: FunctionDeclaration) => {
     _currentFunction = func;
-    if (!currentContext()) {
-      const source = context.getSourceCode();
 
-      // TODO: Error if nested contexts (@context in comments on multiple ancestors)
-      const comments = [func, ...context.getAncestors()]
-        .flatMap((n) => source.getCommentsBefore(n))
-        .map((c) => c.value)
-        .join(" ");
+    const currentCtx = currentContext();
 
-      if (comments.match(isContextRegexp)) {
-        //console.log("Entering Context " + func.id?.name);
-        _currentContext = new Context(context, func);
-      }
+    // Skip if we're already in the same context
+    if (currentCtx?.func === func) return;
+
+    const source = context.getSourceCode();
+
+    const comments = currentCtx
+      ? source.getCommentsBefore(func)
+      : [func, ...context.getAncestors()].flatMap((n) =>
+          source.getCommentsBefore(n)
+        );
+
+    const commentStr = comments.map((c) => c.value).join(" ");
+    const hasContextComment = commentStr.match(isContextRegexp);
+
+    if (hasContextComment) {
+      //console.log("Entering Context " + func.id?.name);
+      _currentContext.push(new Context(context, func));
     }
   };
 

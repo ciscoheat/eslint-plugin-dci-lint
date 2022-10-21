@@ -11,7 +11,8 @@
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"pnpm --dir E:/Projects/TEST/eslint-testp lint\"",
+    "dev": "tsc-watch --onSuccess \"pnpm lint\"",
+    "external-test": "tsc-watch --onSuccess \"pnpm --dir E:/Projects/TEST/eslint-testp lint\"",
     "lint": "eslint .",
     "test": "mocha tests --recursive"
   },
@@ -19,15 +20,15 @@
     "@tsconfig/node16-strictest": "^1.0.4",
     "@tsconfig/recommended": "^1.0.1",
     "@types/esquery": "^1.0.2",
-    "@types/node": "^18.11.0",
+    "@types/node": "^18.11.3",
     "@typescript-eslint/eslint-plugin": "^5.40.1",
     "@typescript-eslint/parser": "^5.40.1",
     "@typescript-eslint/utils": "^5.40.1",
     "eslint": "^8.25.0",
-    "eslint-plugin-eslint-plugin": "^5.0.0",
+    "eslint-plugin-eslint-plugin": "^5.0.6",
     "eslint-plugin-node": "^11.1.0",
     "esquery": "^1.4.0",
-    "mocha": "^10.0.0",
+    "mocha": "^10.1.0",
     "tsc-watch": "^5.0.3",
     "typescript": "^4.8.4"
   },

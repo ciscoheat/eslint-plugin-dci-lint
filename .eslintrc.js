@@ -7,7 +7,8 @@ module.exports = {
   extends: [
     "eslint:recommended",
     //"plugin:node/recommended",
-    'plugin:@typescript-eslint/recommended'
+    'plugin:@typescript-eslint/recommended',
+    'plugin:dci-lint/recommended'
   ],
   env: {
     node: true,

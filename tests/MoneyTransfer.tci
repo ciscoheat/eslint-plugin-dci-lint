@@ -1,0 +1,24 @@
+export const MoneyTransfer = {
+  transfer() { 
+    SOURCE.withdraw()
+  }
+
+  AMOUNT: number
+
+  SOURCE: {
+    decreaseBalance(amount: number): void
+
+    withdraw() {
+      SOURCE.decreaseBalance(AMOUNT)
+      DESTINATION.deposit()
+    }
+  }
+
+  DESTINATION: {
+    increaseBalance(amount: number): void
+
+    deposit() {
+      DESTINATION.increaseBalance(AMOUNT)
+    }
+  }
+}

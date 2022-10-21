@@ -8,10 +8,10 @@ import type { createRule } from "./DCIRuleHelpers";
  */
 
 const rules: Array<[string, "error" | "warn"]> = [
-  ["block-definition", "error"],
   ["literal-role-contracts", "error"],
   ["ordered-rolemethods", "error"],
   ["private-rolemethods", "error"],
+  ["no-this-in-context", "error"],
   ["uppercase-roles", "warn"],
 ];
 
