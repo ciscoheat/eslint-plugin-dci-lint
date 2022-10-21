@@ -9,7 +9,7 @@ import type { MemberExpression } from "@typescript-eslint/types/dist/generated/a
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
-  name: "private-rolemethods",
+  name: "private-role-access",
   create(context) {
     return contextRules(context, {
       CallExpression(callExpr) {

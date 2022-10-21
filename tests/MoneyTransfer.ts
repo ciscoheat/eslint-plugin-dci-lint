@@ -36,6 +36,7 @@ export function MoneyTransfer(
     DESTINATION.increaseBalance(AMOUNT);
   }
 
+  //SOURCE.decreaseBalance(100);
   //SOURCE__confirm();
   SOURCE_withdraw();
 }
