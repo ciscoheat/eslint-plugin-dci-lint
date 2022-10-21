@@ -1,18 +1,21 @@
 {
   "name": "eslint-plugin-dci-lint",
   "version": "0.1.0",
-  "description": "Helps you adhere to DCI conventions.",
+  "author": "Andreas Söderlund <ciscoheat@gmail.com> (https://blog.encodeart.dev)",
+  "description": "An Typescript ESLint plugin that helps you adhere to DCI conventions.",
   "keywords": [
     "eslint",
     "eslintplugin",
-    "eslint-plugin"
+    "eslint-plugin",
+    "typescript",
+    "dci"
   ],
-  "author": "Andreas Söderlund",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "tsc",
     "dev": "tsc-watch --onSuccess \"pnpm lint\"",
-    "external-test": "tsc-watch --onSuccess \"pnpm --dir E:/Projects/TEST/eslint-testp lint\"",
     "lint": "eslint .",
     "test": "mocha tests --recursive"
   },
@@ -29,6 +32,7 @@
     "eslint-plugin-node": "^11.1.0",
     "esquery": "^1.4.0",
     "mocha": "^10.1.0",
+    "npm-packlist": "^7.0.1",
     "tsc-watch": "^5.0.3",
     "typescript": "^4.8.4"
   },
