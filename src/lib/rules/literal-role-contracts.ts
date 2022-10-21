@@ -1,10 +1,7 @@
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
-import type {
-  Identifier,
-  FunctionDeclaration,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
+import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 const allowedLiteralTypes: string[] = [
   AST_NODE_TYPES.TSTypeLiteral,
@@ -20,31 +17,33 @@ export default createRule({
   create(context) {
     return contextRules(context, {
       FunctionDeclaration(node: FunctionDeclaration) {
-        if (!isContext(node)) return;
+        const dciContext = isContext(node);
+        if (!dciContext) return;
 
-        for (const param of node.params as Identifier[])
+        for (const role of dciContext.roles.values()) {
           if (
             !allowedLiteralTypes.includes(
-              param.typeAnnotation?.typeAnnotation.type ?? ""
+              role.id.typeAnnotation?.typeAnnotation.type ?? ""
             )
           ) {
             context.report({
-              loc: param.loc,
+              loc: role.id.typeAnnotation?.typeAnnotation.loc ?? role.id.loc,
               messageId: "literal",
             });
           }
+        }
       },
     });
   },
   meta: {
     docs: {
       description:
-        "Role interfaces must be declared using an object type, array or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+        "Role interfaces must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
       recommended: "error",
     },
     messages: {
       literal:
-        "Role interfaces must be declared using an object type, array or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+        "Role interfaces must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
     },
     type: "problem",
     schema: [],

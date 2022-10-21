@@ -45,9 +45,10 @@ In the project directory, you can run ESLint with `npx eslint .` but the recomme
 
 These rules should not be turned off.
 
+- `dci-lint/atomic-role-binding` - All RoleMethods must be bound (reassigned) in the same function. Not used if `dci-lint/immutable-roles` is enabled.
+- `dci-lint/grouped-rolemethods` - RoleMethods must be grouped together, without unrelated code between them.
 - `dci-lint/literal-role-contracts` - Role contracts can only be defined as literal objects, primitive types or arrays.
 - `dci-lint/no-this-in-context` - Disallows `this` in Contexts.
-- `dci-lint/grouped-rolemethods` - RoleMethods must be grouped together.
 - `dci-lint/private-role-access` - Private RoleMethods and Role contracts can only be accessed within their own Roles.
 - `no-param-reassign` - From the [ESLint ruleset](https://eslint.org/docs/latest/rules/no-param-reassign). Prevents reassigning of Roles inside the Context.
 
@@ -55,4 +56,5 @@ These rules should not be turned off.
 
 These rules can be turned off.
 
+- `dci-lint/immutable-roles` - Prevents reassigning of Roles.
 - `dci-lint/uppercase-roles` - Roles must be uppercased.

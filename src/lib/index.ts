@@ -8,10 +8,13 @@ import type { createRule } from "./DCIRuleHelpers";
  */
 
 const rules: Array<[string, "error" | "warn"]> = [
-  ["literal-role-contracts", "error"],
   ["grouped-rolemethods", "error"],
-  ["private-role-access", "error"],
+  ["literal-role-contracts", "error"],
   ["no-this-in-context", "error"],
+  ["private-role-access", "error"],
+  ["atomic-role-binding", "error"],
+
+  ["immutable-roles", "warn"],
   ["uppercase-roles", "warn"],
 ];
 
@@ -28,7 +31,6 @@ module.exports = {
     recommended: {
       plugins: ["dci-lint"],
       rules: {
-        "no-param-reassign": "error",
         ...Object.fromEntries(recommendedRules),
       },
     },

@@ -14,9 +14,11 @@ export function MoneyTransfer(
 ) {
   console.log("Before RoleMethods");
 
-  const NEWAMOUNT = {
-    confirm2: () => console.log(AMOUNT * 2),
-  };
+  // Disable so rebinding works.
+  // eslint-disable-next-line dci-lint/immutable-roles
+  let NEWAMOUNT: {
+    confirm2: () => void;
+  } = { confirm2: () => console.log(AMOUNT * 2) };
 
   function NEWAMOUNT_test() {
     NEWAMOUNT.confirm2();
@@ -35,35 +37,51 @@ export function MoneyTransfer(
     NEWAMOUNT_test();
   }
 
+  //AMOUNT = 234;
+
   function DESTINATION_deposit() {
     //SOURCE.decreaseBalance(100);
     //SOURCE__confirm();
     DESTINATION.increaseBalance(AMOUNT);
   }
 
+  AMOUNT = 123;
+
+  const rebind = () => {
+    // Disable so rebinding works
+    // eslint-disable-next-line dci-lint/immutable-roles
+    NEWAMOUNT = {
+      confirm2: () => {
+        /* */
+      },
+    };
+    // eslint-disable-next-line dci-lint/immutable-roles
+    SOURCE = {
+      decreaseBalance: (amount) => {
+        amount;
+      },
+    };
+    // eslint-disable-next-line dci-lint/immutable-roles
+    DESTINATION = {
+      increaseBalance: (amount) => {
+        amount;
+      },
+    };
+  };
+
+  /*
+  function rebind2() {
+    NEWAMOUNT = {
+      confirm2: () => {
+        //
+      },
+    };
+  }
+  */
+
+  rebind();
+
   //SOURCE.decreaseBalance(100);
   //SOURCE__confirm();
   SOURCE_withdraw();
 }
-
-/**
- * @DCI-context
- */
-function PayBills(PAYEES: { name: string }[]) {
-  function PAYEES_reversed() {
-    console.log(PAYEES.map((p) => p.name.toLocaleUpperCase()));
-  }
-
-  PAYEES_reversed();
-
-  /**
-   * @DCI-context
-   */
-  function Nested() {
-    //
-  }
-
-  Nested();
-}
-
-PayBills([{ name: "Boris" }]);

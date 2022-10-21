@@ -33,7 +33,7 @@ export function potentialRoleVar(node: Statement) {
     node.declarations.length == 1 &&
     node.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
     node.declarations[0]?.id.type == AST_NODE_TYPES.Identifier
-    ? node.declarations[0].id
+    ? { id: node.declarations[0].id, kind: node.kind }
     : null;
 }
 
@@ -42,14 +42,17 @@ const privateRoleSplitter = "__";
 
 const isContextRegexp = /\W*@DCI-context\b/i;
 
-class Context {
+type RoleKind = "const" | "let" | "var" | "param";
+
+export class Context {
   readonly func: FunctionDeclaration;
   readonly roles = new Map<
     string,
     {
+      name: string;
       id: Identifier;
       methods: RoleMethod[];
-      location: "parameter" | "identifier";
+      kind: RoleKind;
     }
   >();
   private funcMap = new Map<FunctionDeclaration, RoleMethod>();
@@ -71,10 +74,7 @@ class Context {
         func.params.filter(
           (p) => p.type == AST_NODE_TYPES.Identifier
         ) as Identifier[]
-      ).map((i) => [
-        i.name,
-        { id: i, type: "parameter" as "parameter" | "identifier" },
-      ])
+      ).map((i) => [i.name, { id: i, kind: "param" as RoleKind }])
     );
 
     const statements = func.body.body;
@@ -83,9 +83,9 @@ class Context {
     for (const s of statements) {
       const roleVar = potentialRoleVar(s);
       if (roleVar) {
-        potentialRoles.set(roleVar.name, {
-          id: roleVar,
-          type: "identifier",
+        potentialRoles.set(roleVar.id.name, {
+          id: roleVar.id,
+          kind: roleVar.kind,
         });
       }
     }
@@ -116,8 +116,9 @@ class Context {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const role = potentialRoles.get(rm.role)!;
           this.roles.set(rm.role, {
+            name: rm.role,
             id: role.id,
-            location: role.type,
+            kind: role.kind,
             methods: [contextRm],
           });
         } else {
@@ -161,7 +162,7 @@ export const currentFunction = () => _currentFunction;
 
 export const isInContext = () => currentContext();
 export const isContext = (func: FunctionDeclaration) =>
-  func && currentContext()?.func === func ? currentContext() : null;
+  func && currentContext()?.func === func ? currentContext() : undefined;
 
 export const contextRules = (
   context: GenericRuleContext,
