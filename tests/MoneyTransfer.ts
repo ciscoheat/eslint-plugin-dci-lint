@@ -43,12 +43,12 @@ export function MoneyTransfer(
 /**
  * @DCI-context
  */
-function PayBills(PAYEE: { name: string }) {
-  function PAYEE_reversed() {
-    console.log(PAYEE.name.toLocaleUpperCase());
+function PayBills(PAYEES: { name: string }[]) {
+  function PAYEES_reversed() {
+    console.log(PAYEES.map((p) => p.name.toLocaleUpperCase()));
   }
 
-  PAYEE_reversed();
+  PAYEES_reversed();
 
   /**
    * @DCI-context
@@ -60,4 +60,4 @@ function PayBills(PAYEE: { name: string }) {
   Nested();
 }
 
-PayBills({ name: "Boris" });
+PayBills([{ name: "Boris" }]);

@@ -1,14 +1,18 @@
+import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
+
 import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import type {
   Identifier,
   FunctionDeclaration,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
 
-const allowedLiteralTypes = [
-  "TSTypeLiteral",
-  "TSNumberKeyword",
-  "TSStringKeyword",
-  "TSBooleanKeyword",
+const allowedLiteralTypes: string[] = [
+  AST_NODE_TYPES.TSTypeLiteral,
+  AST_NODE_TYPES.TSNumberKeyword,
+  AST_NODE_TYPES.TSStringKeyword,
+  AST_NODE_TYPES.TSBooleanKeyword,
+  AST_NODE_TYPES.TSBigIntKeyword,
+  AST_NODE_TYPES.TSArrayType,
 ];
 
 export default createRule({
