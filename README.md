@@ -18,9 +18,7 @@ npm i --save-dev eslint-plugin-dci-lint
 
 ## Configuration
 
-Add `dci-lint` and the typescript parser to the extends section of your `.eslintrc` configuration file:
-
-**.eslintrc.cjs**
+Add `dci-lint` and the typescript parser to your `.eslintrc` configuration file:
 
 ```js
 module.exports = {
@@ -37,7 +35,7 @@ module.exports = {
 
 ## Running
 
-In the project directory, you can run ESLint with `npx eslint .` but the recommended way is to use it with a code editor, for example [VS Code](https://code.visualstudio.com/). This [extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
+In the project directory, you can run ESLint with `npx eslint .` but while coding it's best to use it with a code editor, for example [VS Code](https://code.visualstudio.com/). This [extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
 
 ## Supported Rules
 
@@ -66,4 +64,8 @@ Will soon follow. In the meantime, dive into [fulloo.info](https://fulloo.info/)
 
 Are best expressed as a Github issue [here](https://github.com/ciscoheat/eslint-plugin-dci-lint/issues)!
 
-As always, a big thanks to Trygve Reenskaug and James Coplien for inventing and continously improving on DCI over the years.
+## Thanks
+
+Thanks to the [Typescript ESLint project](https://typescript-eslint.io/) for making this possible at all!
+
+And as always, a big thanks to Trygve Reenskaug and James Coplien for inventing and continously improving on DCI over the years.
