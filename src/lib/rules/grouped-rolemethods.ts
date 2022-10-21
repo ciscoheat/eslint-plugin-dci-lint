@@ -1,4 +1,9 @@
-import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
+import {
+  createRule,
+  contextRules,
+  isContext,
+  potentialRoleVar,
+} from "../DCIRuleHelpers";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
@@ -11,24 +16,29 @@ export default createRule({
 
         const nodes = node.body.body;
 
-        // TODO: Should only RoleMethod functions be allowed in top-level?
-        const roleMethods = new Map(
-          nodes.map((node) => [
-            node,
-            node.type == AST_NODE_TYPES.FunctionDeclaration
-              ? dciContext.roleMethodCall(node.id?.name)
-              : null,
-          ])
-        );
+        const nodeOrder = nodes.map((node) => {
+          switch (node.type) {
+            case AST_NODE_TYPES.FunctionDeclaration: {
+              return dciContext.roleMethodFromFunc(node);
+            }
+            case AST_NODE_TYPES.VariableDeclaration: {
+              const roleVar = potentialRoleVar(node);
+              if (roleVar) {
+                return roleVar;
+              }
+            }
+          }
+          return undefined;
+        });
 
-        const rolePos = new Set<string>();
+        const usedRoles = new Set<string>();
         let currentRole = "";
         let lastNode;
 
-        for (const [node, rm] of roleMethods) {
+        for (const rm of nodeOrder) {
           if (!rm) {
             // A non-RoleMethod expression, cannot be placed between RoleMethods.
-            if (rolePos.size > 0) {
+            if (usedRoles.size > 0) {
               lastNode = node;
             }
           } else if (lastNode) {
@@ -38,15 +48,18 @@ export default createRule({
             });
             lastNode = null;
           } else {
-            if (rm.role != currentRole) {
-              if (rolePos.has(rm.role)) {
+            // Check if RoleMethod is an Identifier
+            const roleName = "name" in rm ? rm.name : rm.role;
+
+            if (roleName != currentRole) {
+              if (usedRoles.has(roleName)) {
                 context.report({
                   messageId: "unordered",
-                  node,
+                  loc: "name" in rm ? rm.loc : rm.func.loc,
                 });
               } else {
-                rolePos.add(rm.role);
-                currentRole = rm.role;
+                usedRoles.add(roleName);
+                currentRole = roleName;
               }
             }
           }
@@ -57,12 +70,12 @@ export default createRule({
   meta: {
     docs: {
       description:
-        "RoleMethods belonging to a Role must come after one another, they cannot be mixed with other Role's methods.",
+        "RoleMethods belonging to a Role must come after one another, they cannot be mixed with other declarations in the Context.",
       recommended: "error",
     },
     messages: {
       unordered:
-        "RoleMethods belonging to a Role must come after one another, they cannot be mixed with other Role's methods.",
+        "RoleMethods belonging to a Role must come after one another, they cannot be mixed with other declarations in the Context.",
       mixed:
         "Statements and expressions cannot be placed between RoleMethods, only before or after.",
     },

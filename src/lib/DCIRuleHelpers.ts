@@ -5,6 +5,7 @@ import type { RuleContext } from "@typescript-eslint/utils/dist/ts-eslint";
 import {
   AST_NODE_TYPES,
   Identifier,
+  Statement,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export const createRule = ESLintUtils.RuleCreator(
@@ -27,6 +28,15 @@ interface RoleMethod extends RoleMethodCall {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GenericRuleContext = RuleContext<any, any>;
 
+export function potentialRoleVar(node: Statement) {
+  return node.type == AST_NODE_TYPES.VariableDeclaration &&
+    node.declarations.length == 1 &&
+    node.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
+    node.declarations[0]?.id.type == AST_NODE_TYPES.Identifier
+    ? node.declarations[0].id
+    : null;
+}
+
 const publicRoleSplitter = "_";
 const privateRoleSplitter = "__";
 
@@ -34,7 +44,14 @@ const isContextRegexp = /\W*@DCI-context\b/i;
 
 class Context {
   readonly func: FunctionDeclaration;
-  readonly roles = new Map<string, { id: Identifier; methods: RoleMethod[] }>();
+  readonly roles = new Map<
+    string,
+    {
+      id: Identifier;
+      methods: RoleMethod[];
+      location: "parameter" | "identifier";
+    }
+  >();
   private funcMap = new Map<FunctionDeclaration, RoleMethod>();
 
   constructor(context: GenericRuleContext, func: FunctionDeclaration) {
@@ -54,21 +71,22 @@ class Context {
         func.params.filter(
           (p) => p.type == AST_NODE_TYPES.Identifier
         ) as Identifier[]
-      ).map((i) => [i.name, i])
+      ).map((i) => [
+        i.name,
+        { id: i, type: "parameter" as "parameter" | "identifier" },
+      ])
     );
 
     const statements = func.body.body;
 
     // Check if a top-level statement exists as a potential Role.
     for (const s of statements) {
-      if (
-        s.type == AST_NODE_TYPES.VariableDeclaration &&
-        s.declarations.length == 1 &&
-        s.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
-        s.declarations[0]?.id.type == AST_NODE_TYPES.Identifier
-      ) {
-        const declaration = s.declarations[0].id;
-        potentialRoles.set(declaration.name, declaration);
+      const roleVar = potentialRoleVar(s);
+      if (roleVar) {
+        potentialRoles.set(roleVar.name, {
+          id: roleVar,
+          type: "identifier",
+        });
       }
     }
 
@@ -90,11 +108,16 @@ class Context {
         func,
       };
 
+      this.funcMap.set(func, contextRm);
+
       if (!this.roles.has(rm.role)) {
         // Check if a potential role exist, if so, add the Role.
         if (potentialRoles.has(rm.role)) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const role = potentialRoles.get(rm.role)!;
           this.roles.set(rm.role, {
-            id: potentialRoles.get(rm.role) as Identifier,
+            id: role.id,
+            location: role.type,
             methods: [contextRm],
           });
         } else {
@@ -105,7 +128,6 @@ class Context {
         }
       } else {
         this.roles.get(rm.role)?.methods?.push(contextRm);
-        this.funcMap.set(func, contextRm);
       }
     }
   }

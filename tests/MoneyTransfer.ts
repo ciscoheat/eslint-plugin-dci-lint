@@ -12,11 +12,15 @@ export function MoneyTransfer(
 
   AMOUNT: number
 ) {
+  console.log("Before RoleMethods");
+
   const NEWAMOUNT = {
     confirm2: () => console.log(AMOUNT * 2),
   };
 
-  console.log("Before RoleMethods");
+  function NEWAMOUNT_test() {
+    NEWAMOUNT.confirm2();
+  }
 
   function SOURCE_withdraw() {
     SOURCE.decreaseBalance(AMOUNT);
@@ -26,8 +30,9 @@ export function MoneyTransfer(
 
   function SOURCE__confirm() {
     console.log(AMOUNT);
+    //NEWAMOUNT.confirm2()
     //this.test();
-    NEWAMOUNT.confirm2();
+    NEWAMOUNT_test();
   }
 
   function DESTINATION_deposit() {
