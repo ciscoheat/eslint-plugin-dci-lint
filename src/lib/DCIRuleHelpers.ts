@@ -221,9 +221,9 @@ export const contextRules = (
 
       const comments = currentCtx
         ? source.getCommentsBefore(func)
-        : [func, ...context.getAncestors()].flatMap((n) =>
-            source.getCommentsBefore(n)
-          );
+        : [func, ...context.getAncestors()]
+            .filter((n) => n.parent)
+            .flatMap((n) => source.getCommentsBefore(n));
 
       const commentStr = comments.map((c) => c.value).join(" ");
       const hasContextComment = commentStr.match(isContextRegexp);

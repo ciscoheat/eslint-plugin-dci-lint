@@ -1,4 +1,10 @@
 /**
+ * This is a MoneyTransfer that tests the linter.
+ */
+const a = 213;
+a;
+
+/**
  * @DCI-context
  */
 export function MoneyTransfer(

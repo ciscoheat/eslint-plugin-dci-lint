@@ -23,7 +23,7 @@ export default createRule({
           if (!currentRM || currentRM.role != identifier.name) {
             context.report({
               node: identifier,
-              messageId: "privateContractCall",
+              messageId: "externalContractCall",
             });
           }
         } else {
@@ -41,12 +41,13 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: "Call to private RoleMethod outside its Role.",
+      description: "The Role can only be accessed through its own RoleMethods.",
       recommended: "error",
     },
     messages: {
-      privateCall: "Call to private RoleMethod outside its Role.",
-      privateContractCall: "Call to Role contract method outside its Role.",
+      privateCall: "Accessing a private RoleMethod outside its Role.",
+      externalContractCall:
+        "Accessing the Role contract outside its own RoleMethods.",
     },
     type: "problem",
     schema: [],

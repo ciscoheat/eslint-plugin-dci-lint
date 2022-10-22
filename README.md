@@ -23,12 +23,12 @@ Add `dci-lint` and the typescript parser to your `.eslintrc` configuration file:
 ```js
 module.exports = {
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended'
-    'plugin:dci-lint/recommended'
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:dci-lint/recommended",
   ],
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint"],
   root: true,
 };
 ```
@@ -36,6 +36,10 @@ module.exports = {
 ## Running
 
 In the project directory, you can run ESLint with `npx eslint .` but while coding it's best to use it with a code editor, for example [VS Code](https://code.visualstudio.com/). This [extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
+
+## How to use / Tutorial
+
+A comprehensive tutorial series is available at [https://blog.encodeart.dev/dci-tutorial-for-typescript-part-1](https://blog.encodeart.dev/dci-tutorial-for-typescript-part-1).
 
 ## Supported Rules
 
@@ -56,9 +60,9 @@ These rules are optional, but only turn them off if you have a good reason.
 - `dci-lint/immutable-roles` - Prevents reassigning of Roles. Can be turned off if you don't assign Roles directly in the Context parameters, instead binding (assigning) them elsewhere in the Context.
 - `dci-lint/uppercase-roles` - Roles must be uppercased. Can be turned off if you think it looks horrendous, but it's rather useful to quickly identify Roles, like in a movie script. Try it first. :)
 
-## Tutorials
+## More information
 
-Will soon follow. In the meantime, dive into [fulloo.info](https://fulloo.info/) and its extensive documentation. The [trygve manual](https://fulloo.info/Documents/trygve/trygve1.html) is a worthwhile read for any programmer regardless of skill level.
+Please dive into [fulloo.info](https://fulloo.info/) and its extensive documentation. The [trygve manual](https://fulloo.info/Documents/trygve/trygve1.html) on that site is a worthwhile read for any programmer regardless of skill level.
 
 ## Comments, ideas, issues
 
