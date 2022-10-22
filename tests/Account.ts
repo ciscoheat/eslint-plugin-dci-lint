@@ -1,8 +1,10 @@
 export class Account {
+  readonly name: string;
   readonly ledgers: number[];
 
-  constructor(ledgers: number[] = []) {
+  constructor(name: string, ledgers: number[] = []) {
     this.ledgers = ledgers;
+    this.name = name;
   }
 
   increaseBalance(amount: number) {
@@ -15,6 +17,7 @@ export class Account {
 
   get balance() {
     return (
+      `${this.name}: ` +
       "[" +
       this.ledgers +
       "] -> " +

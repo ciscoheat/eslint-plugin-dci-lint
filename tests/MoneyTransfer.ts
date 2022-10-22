@@ -3,6 +3,7 @@
  */
 export function MoneyTransfer(
   SOURCE: {
+    name: string;
     decreaseBalance(amount: number): void;
   },
 
@@ -40,6 +41,7 @@ export function MoneyTransfer(
   //AMOUNT = 234;
 
   function DESTINATION_deposit() {
+    //console.log(SOURCE.name);
     //SOURCE.decreaseBalance(100);
     //SOURCE__confirm();
     DESTINATION.increaseBalance(AMOUNT);
@@ -60,6 +62,7 @@ export function MoneyTransfer(
       decreaseBalance: (amount) => {
         amount;
       },
+      name: "newSource",
     };
     // eslint-disable-next-line dci-lint/immutable-roles
     DESTINATION = {

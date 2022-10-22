@@ -25,6 +25,15 @@ interface RoleMethod extends RoleMethodCall {
   func: FunctionDeclaration;
 }
 
+type RoleKind = "const" | "let" | "var" | "param";
+
+interface Role {
+  name: string;
+  id: Identifier;
+  methods: RoleMethod[];
+  kind: RoleKind;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GenericRuleContext = RuleContext<any, any>;
 
@@ -42,20 +51,11 @@ const privateRoleSplitter = "__";
 
 const isContextRegexp = /\W*@DCI-context\b/i;
 
-type RoleKind = "const" | "let" | "var" | "param";
-
 export class Context {
   readonly func: FunctionDeclaration;
-  readonly roles = new Map<
-    string,
-    {
-      name: string;
-      id: Identifier;
-      methods: RoleMethod[];
-      kind: RoleKind;
-    }
-  >();
+  readonly roles = new Map<string, Role>();
   private funcMap = new Map<FunctionDeclaration, RoleMethod>();
+  private funcNameMap = new Map<string, RoleMethod>();
 
   constructor(context: GenericRuleContext, func: FunctionDeclaration) {
     this.func = func;
@@ -109,6 +109,7 @@ export class Context {
       };
 
       this.funcMap.set(func, contextRm);
+      this.funcNameMap.set(func.id?.name as string, contextRm);
 
       if (!this.roles.has(rm.role)) {
         // Check if a potential role exist, if so, add the Role.
@@ -137,6 +138,10 @@ export class Context {
     return this.funcMap.get(func);
   }
 
+  roleMethodFromName(name: string) {
+    return this.funcNameMap.get(name);
+  }
+
   isRoleMethod(name: string | undefined) {
     return name && name.includes(publicRoleSplitter);
   }
@@ -154,15 +159,23 @@ export class Context {
 }
 
 const _currentContext: Context[] = [];
+const _currentRoleMethod: RoleMethod[] = [];
 let _currentFunction: FunctionDeclaration | null = null;
 
 const currentContext = () => _currentContext[_currentContext.length - 1];
+const currentRoleMethod = () =>
+  _currentRoleMethod[_currentRoleMethod.length - 1];
 
 export const currentFunction = () => _currentFunction;
 
-export const isInContext = () => currentContext();
+export const isRoleMethod = (func: FunctionDeclaration) =>
+  func && currentRoleMethod()?.func === func ? currentRoleMethod() : undefined;
+
 export const isContext = (func: FunctionDeclaration) =>
   func && currentContext()?.func === func ? currentContext() : undefined;
+
+export const isInContext = () => currentContext();
+export const isInRoleMethod = () => currentRoleMethod();
 
 export const contextRules = (
   context: GenericRuleContext,
@@ -170,9 +183,17 @@ export const contextRules = (
 ) => {
   rule[" FunctionDeclaration:exit"] = (func: FunctionDeclaration) => {
     _currentFunction = null;
-    if (currentContext()?.func === func) {
+    const currentCtx = currentContext();
+
+    if (currentCtx?.func == func) {
       //console.log("Exiting Context " + func?.id?.name);
       _currentContext.pop();
+    } else {
+      const roleMethod = currentCtx?.roleMethodFromFunc(func);
+      if (roleMethod && currentRoleMethod()?.func == func) {
+        //console.log(`Exiting RoleMethod ${roleMethod.func.id?.name}`);
+        _currentRoleMethod.pop();
+      }
     }
   };
 
@@ -182,22 +203,35 @@ export const contextRules = (
     const currentCtx = currentContext();
 
     // Skip if we're already in the same context
-    if (currentCtx?.func === func) return;
+    if (currentCtx?.func == func) return;
 
-    const source = context.getSourceCode();
+    let roleMethod: RoleMethod | undefined;
 
-    const comments = currentCtx
-      ? source.getCommentsBefore(func)
-      : [func, ...context.getAncestors()].flatMap((n) =>
-          source.getCommentsBefore(n)
-        );
+    if (currentCtx) {
+      // Check if entering a RoleMethod
+      roleMethod = currentCtx.roleMethodFromFunc(func);
+      if (roleMethod && currentRoleMethod()?.func != func) {
+        //console.log(`Entering RoleMethod ${roleMethod.func.id?.name}`);
+        _currentRoleMethod.push(roleMethod);
+      }
+    }
 
-    const commentStr = comments.map((c) => c.value).join(" ");
-    const hasContextComment = commentStr.match(isContextRegexp);
+    if (!roleMethod) {
+      const source = context.getSourceCode();
 
-    if (hasContextComment) {
-      //console.log("Entering Context " + func.id?.name);
-      _currentContext.push(new Context(context, func));
+      const comments = currentCtx
+        ? source.getCommentsBefore(func)
+        : [func, ...context.getAncestors()].flatMap((n) =>
+            source.getCommentsBefore(n)
+          );
+
+      const commentStr = comments.map((c) => c.value).join(" ");
+      const hasContextComment = commentStr.match(isContextRegexp);
+
+      if (hasContextComment) {
+        //console.log("Entering Context " + func.id?.name);
+        _currentContext.push(new Context(context, func));
+      }
     }
   };
 
