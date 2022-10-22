@@ -15,7 +15,6 @@ const rules: Array<[string, "error" | "warn"]> = [
   ["atomic-role-binding", "error"],
 
   ["immutable-roles", "warn"],
-  ["uppercase-roles", "warn"],
 ];
 
 const importedRules = rules.map((rule) => [

@@ -8,7 +8,7 @@ a;
  * @DCI-context
  */
 export function MoneyTransfer(
-  SOURCE: {
+  Source: {
     name: string;
     decreaseBalance(amount: number): void;
   },
@@ -31,13 +31,13 @@ export function MoneyTransfer(
     NEWAMOUNT.confirm2();
   }
 
-  function SOURCE_withdraw() {
-    SOURCE.decreaseBalance(AMOUNT);
-    SOURCE__confirm();
+  function Source_withdraw() {
+    Source.decreaseBalance(AMOUNT);
+    Source__confirm();
     DESTINATION_deposit();
   }
 
-  function SOURCE__confirm() {
+  function Source__confirm() {
     console.log(AMOUNT);
     //NEWAMOUNT.confirm2()
     //this.test();
@@ -49,7 +49,7 @@ export function MoneyTransfer(
   function DESTINATION_deposit() {
     //console.log(SOURCE.name);
     //SOURCE.decreaseBalance(100);
-    //SOURCE__confirm();
+    //Source__confirm();
     DESTINATION.increaseBalance(AMOUNT);
   }
 
@@ -64,7 +64,7 @@ export function MoneyTransfer(
       },
     };
     // eslint-disable-next-line dci-lint/immutable-roles
-    SOURCE = {
+    Source = {
       decreaseBalance: (amount) => {
         amount;
       },
@@ -92,5 +92,5 @@ export function MoneyTransfer(
 
   //SOURCE.decreaseBalance(100);
   //SOURCE__confirm();
-  SOURCE_withdraw();
+  Source_withdraw();
 }

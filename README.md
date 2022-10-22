@@ -58,7 +58,6 @@ These rules should not be turned off. [Let me know](https://github.com/ciscoheat
 These rules are optional, but only turn them off if you have a good reason.
 
 - `dci-lint/immutable-roles` - Prevents reassigning of Roles. Can be turned off if you don't assign Roles directly in the Context parameters, instead binding (assigning) them elsewhere in the Context.
-- `dci-lint/uppercase-roles` - Roles must be uppercased. Can be turned off if you think it looks horrendous, but it's rather useful to quickly identify Roles, like in a movie script. Try it first. :)
 
 ## More information
 
