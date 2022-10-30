@@ -93,4 +93,9 @@ export function MoneyTransfer(
   //SOURCE.decreaseBalance(100);
   //SOURCE__confirm();
   Source_withdraw();
+
+  return {
+    start: () => Source_withdraw(),
+    //illegalAccess: Source__confirm,
+  };
 }

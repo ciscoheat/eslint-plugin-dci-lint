@@ -5,14 +5,13 @@ import {
   isInRoleMethod,
 } from "../DCIRuleHelpers";
 import type { Identifier } from "@typescript-eslint/types/dist/generated/ast-spec";
+import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 export default createRule({
   name: "private-role-access",
   create(context) {
     return contextRules(context, {
-      ":matches(MemberExpression, CallExpression) > Identifier"(
-        identifier: Identifier
-      ) {
+      Identifier(identifier: Identifier) {
         const dciContext = isInContext();
         if (!dciContext) return;
 
@@ -21,10 +20,21 @@ export default createRule({
         if (dciContext.roles.has(identifier.name)) {
           // Check for ROLE.member access
           if (!currentRM || currentRM.role != identifier.name) {
-            context.report({
-              node: identifier,
-              messageId: "externalContractCall",
-            });
+            if (identifier.parent == dciContext.func) {
+              // Check if we're in the parameters of the Context, access is allowed there
+            } else if (
+              identifier.parent?.type == AST_NODE_TYPES.VariableDeclarator ||
+              identifier.parent?.type == AST_NODE_TYPES.AssignmentExpression
+            ) {
+              // Check for assignments, that will be handled by the rebinding rule
+            } else {
+              //console.log(identifier.parent?.type);
+
+              context.report({
+                node: identifier,
+                messageId: "externalContractCall",
+              });
+            }
           }
         } else {
           // Check for ROLE_method access
@@ -47,7 +57,7 @@ export default createRule({
     messages: {
       privateCall: "Accessing a private RoleMethod outside its Role.",
       externalContractCall:
-        "Accessing the Role contract outside its own RoleMethods.",
+        "Accessing Role contract outside its own RoleMethods.",
     },
     type: "problem",
     schema: [],
