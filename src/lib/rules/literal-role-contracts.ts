@@ -38,12 +38,12 @@ export default createRule({
   meta: {
     docs: {
       description:
-        "Role interfaces must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+        "Role contracts must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
       recommended: "error",
     },
     messages: {
       literal:
-        "Role interfaces must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+        "Role contracts must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
     },
     type: "problem",
     schema: [],
