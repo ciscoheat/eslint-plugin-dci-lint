@@ -1,13 +1,9 @@
-import {
-  createRule,
-  contextRules,
-  isContext,
-  potentialRoleVar,
-} from "../DCIRuleHelpers";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import {
   AST_NODE_TYPES,
   SourceLocation,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
+import { Context } from "../context";
 
 export default createRule({
   name: "grouped-rolemethods",
@@ -33,7 +29,7 @@ export default createRule({
               break;
             }
             case AST_NODE_TYPES.VariableDeclaration: {
-              const role = potentialRoleVar(node);
+              const role = Context.potentialRoleVar(node);
               if (role && dciContext.roles.has(role.id.name))
                 return {
                   loc: role.id.loc,

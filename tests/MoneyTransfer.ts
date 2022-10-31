@@ -27,13 +27,15 @@ export function MoneyTransfer(
     confirm2: () => void;
   } = { confirm2: () => console.log(AMOUNT * 2) };
 
-  function NEWAMOUNT_test() {
+  const NEWAMOUNT_test = () => {
     NEWAMOUNT.confirm2();
-  }
+  };
 
   function Source_withdraw() {
     Source.decreaseBalance(AMOUNT);
     Source__confirm();
+    Source__confirm2();
+    Source__confirm3();
     DESTINATION_deposit();
   }
 
@@ -44,14 +46,21 @@ export function MoneyTransfer(
     NEWAMOUNT_test();
   }
 
-  //AMOUNT = 234;
+  console.log("in between roles");
 
-  function DESTINATION_deposit() {
-    //console.log(SOURCE.name);
-    //SOURCE.decreaseBalance(100);
+  const Source__confirm2 = () => console.log(Source.name);
+  const Source__confirm3 = () => {
+    console.log(Source__confirm);
+  };
+
+  console.log("in between roles");
+
+  const DESTINATION_deposit = () => {
+    //console.log(Source.name);
+    //Source.decreaseBalance(100);
     //Source__confirm();
     DESTINATION.increaseBalance(AMOUNT);
-  }
+  };
 
   AMOUNT = 123;
 

@@ -6,6 +6,9 @@ import {
 } from "../DCIRuleHelpers";
 import type { Identifier } from "@typescript-eslint/types/dist/generated/ast-spec";
 import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
+import debug from "../debug";
+
+const d = debug("private-role-access");
 
 export default createRule({
   name: "private-role-access",
@@ -28,7 +31,7 @@ export default createRule({
             ) {
               // Check for assignments, that will be handled by the rebinding rule
             } else {
-              //console.log(identifier.parent?.type);
+              d(identifier);
 
               context.report({
                 node: identifier,
@@ -39,7 +42,13 @@ export default createRule({
         } else {
           // Check for ROLE_method access
           const rm = dciContext.roleMethodFromName(identifier.name);
-          if (rm && rm.isPrivate && rm.role != currentRM?.role) {
+          if (!rm) return;
+
+          if (identifier.parent?.type == AST_NODE_TYPES.VariableDeclarator) {
+            // Skip if it's not the definition itself.
+          } else if (rm.isPrivate && rm.role != currentRM?.role) {
+            d(rm, { depth: 1 });
+            d(currentRM, { depth: 1 });
             context.report({
               node: identifier,
               messageId: "privateCall",
