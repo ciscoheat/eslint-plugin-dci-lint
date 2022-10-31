@@ -41,19 +41,19 @@ export function MoneyTransfer(
 
   function Source__confirm() {
     console.log(AMOUNT);
-    //NEWAMOUNT.confirm2()
+    //NEWAMOUNT.confirm2();
     //this.test();
     NEWAMOUNT_test();
   }
 
-  console.log("in between roles");
+  //console.log("in between same roles");
 
   const Source__confirm2 = () => console.log(Source.name);
   const Source__confirm3 = () => {
     console.log(Source__confirm);
   };
 
-  console.log("in between roles");
+  //console.log("in between different roles");
 
   const DESTINATION_deposit = () => {
     //console.log(Source.name);

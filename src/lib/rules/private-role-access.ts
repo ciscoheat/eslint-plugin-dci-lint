@@ -31,8 +31,6 @@ export default createRule({
             ) {
               // Check for assignments, that will be handled by the rebinding rule
             } else {
-              d(identifier);
-
               context.report({
                 node: identifier,
                 messageId: "externalContractCall",

@@ -9,6 +9,9 @@ import {
   Statement,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
 
+//import debug from "./debug";
+//const d = debug("context");
+
 // TODO: Role name checking rule
 // TODO: Role splitting config setting
 
@@ -25,7 +28,7 @@ export interface RoleMethod extends RoleMethodCall {
   func: RoleMethodFunction;
 }
 
-interface Role {
+export interface Role {
   name: string;
   id: Identifier;
   methods: RoleMethod[];

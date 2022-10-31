@@ -3,6 +3,10 @@ import type { RuleListener } from "@typescript-eslint/utils/dist/ts-eslint";
 import { Context, GenericRuleContext, RoleMethodFunction } from "./context";
 import type { RoleMethod } from "./context";
 import debug from "./debug";
+import type {
+  FunctionDeclaration,
+  ArrowFunctionExpression,
+} from "@typescript-eslint/types/dist/generated/ast-spec";
 
 const d = debug("rules");
 
@@ -34,70 +38,77 @@ export const isContext = (func: RoleMethodFunction) =>
 export const isInContext = () => currentContext();
 export const isInRoleMethod = () => currentRoleMethod();
 
+const enterFunction = (
+  func: RoleMethodFunction,
+  context: GenericRuleContext
+) => {
+  _currentFunction = func;
+
+  const currentCtx = currentContext();
+
+  // Skip if we're already in the same context
+  if (currentCtx?.func == func) return;
+
+  let roleMethod: RoleMethod | undefined;
+
+  if (currentCtx) {
+    // Check if entering a RoleMethod
+    roleMethod = currentCtx.roleMethodFromFunc(func);
+    if (roleMethod && currentRoleMethod()?.func != func) {
+      d(`Entering RoleMethod ${roleMethod.role}.${roleMethod.method}`);
+      _currentRoleMethod.push(roleMethod);
+    }
+  }
+
+  if (!roleMethod) {
+    const source = context.getSourceCode();
+
+    const comments = currentCtx
+      ? source.getCommentsBefore(func)
+      : [func, ...context.getAncestors()]
+          .filter((n) => n.parent)
+          .flatMap((n) => source.getCommentsBefore(n));
+
+    const commentStr = comments.map((c) => c.value).join(" ");
+    const hasContextComment = commentStr.match(isContextRegexp);
+
+    if (hasContextComment) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const name = func.id?.name ?? func.parent?.id?.name;
+      d("Entering Context " + name);
+      _currentContext.push(new Context(context, name, func));
+    }
+  }
+};
+
+const exitFunction = (func: RoleMethodFunction) => {
+  _currentFunction = null;
+  const currentCtx = currentContext();
+
+  if (currentCtx?.func == func) {
+    d("Exiting Context " + currentCtx.name);
+    _currentContext.pop();
+  } else {
+    const roleMethod = currentCtx?.roleMethodFromFunc(func);
+    if (roleMethod && currentRoleMethod()?.func == func) {
+      d(`Exiting RoleMethod ${roleMethod.role}.${roleMethod.method}`);
+      _currentRoleMethod.pop();
+    }
+  }
+};
+
 export const contextRules = (
   context: GenericRuleContext,
   rule: RuleListener
 ) => {
-  rule[" :matches(FunctionDeclaration, ArrowFunctionExpression):exit"] = (
-    func: RoleMethodFunction
-  ) => {
-    _currentFunction = null;
-    const currentCtx = currentContext();
+  rule[" FunctionDeclaration:exit"] = exitFunction;
+  rule[" ArrowFunctionExpression:exit"] = exitFunction;
 
-    if (currentCtx?.func == func) {
-      d("Exiting Context " + currentCtx.name);
-      _currentContext.pop();
-    } else {
-      const roleMethod = currentCtx?.roleMethodFromFunc(func);
-      if (roleMethod && currentRoleMethod()?.func == func) {
-        d(`Exiting RoleMethod ${roleMethod.role}.${roleMethod.method}`);
-        _currentRoleMethod.pop();
-      }
-    }
-  };
-
-  rule[" :matches(FunctionDeclaration, ArrowFunctionExpression)"] = (
-    func: RoleMethodFunction
-  ) => {
-    _currentFunction = func;
-
-    const currentCtx = currentContext();
-
-    // Skip if we're already in the same context
-    if (currentCtx?.func == func) return;
-
-    let roleMethod: RoleMethod | undefined;
-
-    if (currentCtx) {
-      // Check if entering a RoleMethod
-      roleMethod = currentCtx.roleMethodFromFunc(func);
-      if (roleMethod && currentRoleMethod()?.func != func) {
-        d(`Entering RoleMethod ${roleMethod.role}.${roleMethod.method}`);
-        _currentRoleMethod.push(roleMethod);
-      }
-    }
-
-    if (!roleMethod) {
-      const source = context.getSourceCode();
-
-      const comments = currentCtx
-        ? source.getCommentsBefore(func)
-        : [func, ...context.getAncestors()]
-            .filter((n) => n.parent)
-            .flatMap((n) => source.getCommentsBefore(n));
-
-      const commentStr = comments.map((c) => c.value).join(" ");
-      const hasContextComment = commentStr.match(isContextRegexp);
-
-      if (hasContextComment) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const name = func.id?.name ?? func.parent?.id?.name;
-        d("Entering Context " + name);
-        _currentContext.push(new Context(context, name, func));
-      }
-    }
-  };
+  rule[" FunctionDeclaration"] = (func: FunctionDeclaration) =>
+    enterFunction(func, context);
+  rule[" ArrowFunctionExpression"] = (func: ArrowFunctionExpression) =>
+    enterFunction(func, context);
 
   return rule;
 };

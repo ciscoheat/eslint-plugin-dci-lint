@@ -3,13 +3,22 @@ import {
   AST_NODE_TYPES,
   SourceLocation,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
-import { Context } from "../context";
+import { Context, Role, RoleMethod } from "../context";
+
+//import debug from "../debug";
+//const d = debug("grouped-rolemethods");
+
+type OrderedStatement =
+  | { method: RoleMethod; loc: SourceLocation }
+  | { role: Role; loc: SourceLocation }
+  | { loc: SourceLocation };
 
 export default createRule({
   name: "grouped-rolemethods",
   create(context) {
     return contextRules(context, {
       FunctionDeclaration(node) {
+        //d(node.id?.name);
         const dciContext = isContext(node);
         if (!dciContext) return;
 
@@ -20,7 +29,7 @@ export default createRule({
         // - Declared Roles
         // - Other code
         // And check that they are in the correct order.
-        const statements = nodes.map((node) => {
+        const statements: OrderedStatement[] = nodes.map((node) => {
           switch (node.type) {
             case AST_NODE_TYPES.FunctionDeclaration: {
               const roleMethod = dciContext.roleMethodFromFunc(node);
@@ -30,18 +39,26 @@ export default createRule({
             }
             case AST_NODE_TYPES.VariableDeclaration: {
               const role = Context.potentialRoleVar(node);
-              if (role && dciContext.roles.has(role.id.name))
-                return {
-                  loc: role.id.loc,
-                  role: dciContext.roles.get(role.id.name),
-                };
+              if (role) {
+                if (dciContext.roles.has(role.id.name)) {
+                  return {
+                    loc: role.id.loc,
+                    role: dciContext.roles.get(role.id.name),
+                  };
+                } else {
+                  const roleMethod = dciContext.roleMethodFromName(
+                    role.id.name
+                  );
+                  if (roleMethod) {
+                    return { loc: role.id.loc, method: roleMethod };
+                  }
+                }
+              }
               break;
             }
           }
           return { loc: node.loc };
         });
-
-        //console.log(potentialRoles);
 
         const usedRoles = new Set<string>();
         const declaredRoles = new Set<string>();
@@ -53,7 +70,7 @@ export default createRule({
             // otherCode is set, so Roles and Methods after that is not allowed.
             context.report({
               messageId: "mixed",
-              loc: code.loc,
+              loc: otherCodeUsed,
             });
           } else if ("role" in code) {
             const roleName = code.role?.name as string;
