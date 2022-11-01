@@ -1,5 +1,5 @@
 /**
- * This is a MoneyTransfer that tests the linter.
+ * This is a file that tests the linter.
  */
 const a = 213;
 a;
@@ -62,6 +62,9 @@ export function MoneyTransfer(
     DESTINATION.increaseBalance(AMOUNT);
   };
 
+  //let DESTINATION_deposit2 = () => { /**/ };
+  //const TEST_noRole = () => { /* */ };
+
   AMOUNT = 123;
 
   const rebind = () => {
@@ -108,3 +111,20 @@ export function MoneyTransfer(
     //illegalAccess: Source__confirm,
   };
 }
+
+/**
+ * @DCI-context
+ * A speaker proclaims a phrase to the world, that dutifully notes it
+ */
+function HelloWorld(
+  Speaker: { phrase: string },
+  World: { log: (msg: unknown) => void }
+) {
+  const Speaker_proclaim = () => World_note(Speaker.phrase);
+
+  const World_note = (phrase: string) => World.log(phrase);
+
+  Speaker_proclaim();
+}
+
+HelloWorld({ phrase: "Hello, World!" }, console);

@@ -1,6 +1,7 @@
 import type {
   FunctionDeclaration,
   ArrowFunctionExpression,
+  VariableDeclaration,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
 import type { RuleContext } from "@typescript-eslint/utils/dist/ts-eslint";
 import {
@@ -98,17 +99,20 @@ export class Context {
 
     //console.log(potentialRoles.keys());
 
-    const functions = new Map<string, RoleMethodFunction>();
+    const functions = new Map<
+      string,
+      { func: RoleMethodFunction; decl: VariableDeclaration | null }
+    >();
     for (const s of statements) {
       if (s.type == AST_NODE_TYPES.FunctionDeclaration) {
-        functions.set(s.id.name, s);
+        functions.set(s.id.name, { func: s, decl: null });
       } else if (
         s.type == AST_NODE_TYPES.VariableDeclaration &&
         s.declarations.length == 1 &&
         s.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
         s.declarations[0]?.init?.type == AST_NODE_TYPES.ArrowFunctionExpression
       ) {
-        // Type description is wrong, name exists on the Identifier.
+        // Type definition is wrong, name exists on the Identifier.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const declarator = s.declarations[0] as any;
         const name = declarator.id.name;
@@ -118,23 +122,31 @@ export class Context {
             message: `Name not found for function`,
           } as never);
         }
-        functions.set(name, s.declarations[0].init);
+        functions.set(name, { func: s.declarations[0].init, decl: s });
       }
     }
 
     // Check if a function is a RoleMethod
-    for (const [name, func] of functions) {
+    for (const [name, expr] of functions) {
       const rm = this.roleMethodCall(name);
       if (!rm) continue;
+
+      if (expr.decl && expr.decl.kind !== "const") {
+        context.report({
+          loc: expr.decl.loc,
+          message: `A RoleMethod must be declared as const`,
+        } as never);
+        continue;
+      }
 
       const contextRm = {
         role: rm.role,
         method: rm.method,
         isPrivate: rm.isPrivate,
-        func,
+        func: expr.func,
       };
 
-      this.funcMap.set(func, contextRm);
+      this.funcMap.set(expr.func, contextRm);
       this.funcNameMap.set(name, contextRm);
 
       if (!this.roles.has(rm.role)) {
@@ -150,7 +162,7 @@ export class Context {
           });
         } else {
           context.report({
-            node: func,
+            loc: expr.func.loc,
             message: `Role "${rm.role}" not found for RoleMethod "${rm.method}"`,
           } as never);
         }
