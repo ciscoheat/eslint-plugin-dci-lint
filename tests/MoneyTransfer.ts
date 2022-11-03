@@ -21,6 +21,13 @@ export function MoneyTransfer(
 ) {
   console.log("Before RoleMethods");
 
+  const DESTINATION_deposit = () => {
+    //console.log(Source.name);
+    //Source.decreaseBalance(100);
+    //Source__confirm();
+    DESTINATION.increaseBalance(AMOUNT);
+  };
+
   // Disable so rebinding works.
   // eslint-disable-next-line dci-lint/immutable-roles
   let NEWAMOUNT: {
@@ -30,14 +37,6 @@ export function MoneyTransfer(
   const NEWAMOUNT_test = () => {
     NEWAMOUNT.confirm2();
   };
-
-  function Source_withdraw() {
-    Source.decreaseBalance(AMOUNT);
-    Source__confirm();
-    Source__confirm2();
-    Source__confirm3();
-    DESTINATION_deposit();
-  }
 
   function Source__confirm() {
     console.log(AMOUNT);
@@ -53,14 +52,14 @@ export function MoneyTransfer(
     console.log(Source__confirm);
   };
 
+  function Source_withdraw() {
+    Source.decreaseBalance(AMOUNT);
+    Source__confirm();
+    Source__confirm2();
+    Source__confirm3();
+    DESTINATION_deposit();
+  }
   //console.log("in between different roles");
-
-  const DESTINATION_deposit = () => {
-    //console.log(Source.name);
-    //Source.decreaseBalance(100);
-    //Source__confirm();
-    DESTINATION.increaseBalance(AMOUNT);
-  };
 
   //let DESTINATION_deposit2 = () => { /**/ };
   //const TEST_noRole = () => { /* */ };

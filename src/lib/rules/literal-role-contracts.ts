@@ -38,14 +38,14 @@ export default createRule({
   meta: {
     docs: {
       description:
-        "Role contracts must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
-      recommended: "error",
+        "Role contracts should be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+      recommended: "warn",
     },
     messages: {
       literal:
-        "Role contracts must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+        "Role contracts should be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
     },
-    type: "problem",
+    type: "suggestion",
     schema: [],
   },
   defaultOptions: [],
