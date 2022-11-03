@@ -38,6 +38,14 @@ export function MoneyTransfer(
     NEWAMOUNT.confirm2();
   };
 
+  function Source_withdraw() {
+    Source.decreaseBalance(AMOUNT);
+    Source__confirm();
+    Source__confirm2();
+    Source__confirm3();
+    DESTINATION_deposit();
+  }
+
   function Source__confirm() {
     console.log(AMOUNT);
     //NEWAMOUNT.confirm2();
@@ -52,13 +60,6 @@ export function MoneyTransfer(
     console.log(Source__confirm);
   };
 
-  function Source_withdraw() {
-    Source.decreaseBalance(AMOUNT);
-    Source__confirm();
-    Source__confirm2();
-    Source__confirm3();
-    DESTINATION_deposit();
-  }
   //console.log("in between different roles");
 
   //let DESTINATION_deposit2 = () => { /**/ };

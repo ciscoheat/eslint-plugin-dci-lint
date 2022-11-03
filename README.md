@@ -58,7 +58,12 @@ These rules are optional, but only turn them off if you have a good reason.
 
 - `dci-lint/literal-role-contracts` - Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). Can be turned off, but that can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code.
 - `dci-lint/immutable-roles` - Prevents reassigning of Roles. Can be turned off if you don't assign Roles directly in the Context parameters, instead binding (assigning) them elsewhere in the Context.
-- `dci-lint/sorted-rolemethods` - RoleMethods should be placed in alphabetical order.
+
+### Optional
+
+These rules are optional and are off as default.
+
+- `dci-lint/sorted-rolemethods` - RoleMethods must be placed in alphabetical order.
 
 ## More information
 

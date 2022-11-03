@@ -7,7 +7,7 @@ import type { createRule } from "./DCIRuleHelpers";
  * @author Andreas Söderlund
  */
 
-const rules: Array<[string, "error" | "warn"]> = [
+const rules: Array<[string, "error" | "warn" | "off"]> = [
   ["grouped-rolemethods", "error"],
   ["no-this-in-context", "error"],
   ["private-role-access", "error"],
@@ -15,7 +15,7 @@ const rules: Array<[string, "error" | "warn"]> = [
 
   ["literal-role-contracts", "warn"],
   ["immutable-roles", "warn"],
-  ["sorted-rolemethods", "warn"],
+  ["sorted-rolemethods", "off"],
 ];
 
 const importedRules = rules.map((rule) => [
