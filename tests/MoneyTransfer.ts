@@ -58,12 +58,25 @@ export function MoneyTransfer(
   const Source__confirm2 = () => console.log(Source.name);
   const Source__confirm3 = () => {
     console.log(Source__confirm);
+    Multiple_output();
+    //Multiple__private();
   };
 
   //console.log("in between different roles");
 
   //let DESTINATION_deposit2 = () => { /**/ };
   //const TEST_noRole = () => { /* */ };
+
+  const Multiple: { test: number } = { test: 123 },
+    Multiple_output = () => console.log(Multiple.test),
+    Multiple_output2 = () => {
+      console.log(AMOUNT);
+      Multiple_output();
+      //DESTINATION.increaseBalance(123);
+    },
+    Multiple__private = () => {
+      Multiple_output2();
+    };
 
   AMOUNT = 123;
 
@@ -88,6 +101,7 @@ export function MoneyTransfer(
         amount;
       },
     };
+    //Multiple = {test: 234}
   };
 
   /*

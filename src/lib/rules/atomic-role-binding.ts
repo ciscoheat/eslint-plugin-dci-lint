@@ -31,7 +31,11 @@ export default createRule({
         const assignmentMap = new Map(assignments.map((a) => [a.name, a]));
 
         // Check if all assignments are made in the same block.
-        const allRoles = new Set(dciContext.roles.keys());
+        const allRoles = new Set(
+          Array.from(dciContext.roles.entries())
+            .filter(([, roleId]) => roleId.kind != "const")
+            .map(([role]) => role)
+        );
 
         if (assignmentMap.size > 0) {
           if (assignmentMap.size < allRoles.size) {

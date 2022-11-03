@@ -11,13 +11,13 @@ export default createRule({
         if (!dciContext) return;
 
         const roleOrder = node.body.body
-          .map((s) => {
+          .flatMap((s) => {
             if (s.type == AST_NODE_TYPES.VariableDeclaration) {
               const roleVar = Context.potentialRoleVar(s);
               if (!roleVar) return null;
-              return dciContext.roleMethodFromName(roleVar.id.name)
-                ? roleVar.id.name
-                : null;
+              return roleVar.identifiers.map((r) =>
+                dciContext.roleMethodFromName(r.name) ? r.name : null
+              );
             } else if (s.type == AST_NODE_TYPES.FunctionDeclaration) {
               return dciContext.roleMethodFromName(s.id.name)
                 ? s.id.name

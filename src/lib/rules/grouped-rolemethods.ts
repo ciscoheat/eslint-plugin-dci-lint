@@ -29,7 +29,7 @@ export default createRule({
         // - Declared Roles
         // - Other code
         // And check that they are in the correct order.
-        const statements: OrderedStatement[] = nodes.map((node) => {
+        const statements: OrderedStatement[] = nodes.flatMap((node) => {
           switch (node.type) {
             case AST_NODE_TYPES.FunctionDeclaration: {
               const roleMethod = dciContext.roleMethodFromFunc(node);
@@ -40,19 +40,18 @@ export default createRule({
             case AST_NODE_TYPES.VariableDeclaration: {
               const role = Context.potentialRoleVar(node);
               if (role) {
-                if (dciContext.roles.has(role.id.name)) {
-                  return {
-                    loc: role.id.loc,
-                    role: dciContext.roles.get(role.id.name),
-                  };
-                } else {
-                  const roleMethod = dciContext.roleMethodFromName(
-                    role.id.name
-                  );
-                  if (roleMethod) {
-                    return { loc: role.id.loc, method: roleMethod };
+                return role.identifiers.map((r) => {
+                  if (dciContext.roles.has(r.name))
+                    return { loc: r.loc, role: dciContext.roles.get(r.name) };
+                  else {
+                    const roleMethod = dciContext.roleMethodFromName(r.name);
+                    if (roleMethod) {
+                      return { loc: r.loc, method: roleMethod };
+                    } else {
+                      return { loc: r.loc };
+                    }
                   }
-                }
+                });
               }
               break;
             }

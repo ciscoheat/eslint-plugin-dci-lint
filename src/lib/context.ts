@@ -51,12 +51,12 @@ export class Context {
   private funcNameMap = new Map<string, RoleMethod>();
 
   static potentialRoleVar(node: Statement) {
-    return node.type == AST_NODE_TYPES.VariableDeclaration &&
-      node.declarations.length == 1 &&
-      node.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
-      node.declarations[0]?.id.type == AST_NODE_TYPES.Identifier
-      ? { id: node.declarations[0].id, kind: node.kind }
-      : null;
+    if (node.type != AST_NODE_TYPES.VariableDeclaration) return null;
+    const identifiers = node.declarations
+      .filter((d) => d.id.type == AST_NODE_TYPES.Identifier)
+      .map((d) => d.id as Identifier);
+
+    return { identifiers, kind: node.kind };
   }
 
   constructor(
@@ -90,10 +90,12 @@ export class Context {
     for (const s of statements) {
       const roleVar = Context.potentialRoleVar(s);
       if (roleVar) {
-        potentialRoles.set(roleVar.id.name, {
-          id: roleVar.id,
-          kind: roleVar.kind,
-        });
+        for (const id of roleVar.identifiers) {
+          potentialRoles.set(id.name, {
+            id,
+            kind: roleVar.kind,
+          });
+        }
       }
     }
 
@@ -106,23 +108,24 @@ export class Context {
     for (const s of statements) {
       if (s.type == AST_NODE_TYPES.FunctionDeclaration) {
         functions.set(s.id.name, { func: s, decl: null });
-      } else if (
-        s.type == AST_NODE_TYPES.VariableDeclaration &&
-        s.declarations.length == 1 &&
-        s.declarations[0]?.type == AST_NODE_TYPES.VariableDeclarator &&
-        s.declarations[0]?.init?.type == AST_NODE_TYPES.ArrowFunctionExpression
-      ) {
-        // Type definition is wrong, name exists on the Identifier.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const declarator = s.declarations[0] as any;
-        const name = declarator.id.name;
-        if (!name) {
-          context.report({
-            loc: declarator.loc,
-            message: `Name not found for function`,
-          } as never);
+      } else if (s.type == AST_NODE_TYPES.VariableDeclaration) {
+        for (const declaration of s.declarations) {
+          if (
+            declaration.type != AST_NODE_TYPES.VariableDeclarator ||
+            declaration.init?.type != AST_NODE_TYPES.ArrowFunctionExpression
+          ) {
+            continue;
+          }
+          // Type definition is wrong, name exists on the Identifier.
+          const name = (declaration.id as Identifier).name;
+          if (!name) {
+            context.report({
+              loc: declaration.loc,
+              message: `Name not found for function`,
+            } as never);
+          }
+          functions.set(name, { func: declaration.init, decl: s });
         }
-        functions.set(name, { func: s.declarations[0].init, decl: s });
       }
     }
 
