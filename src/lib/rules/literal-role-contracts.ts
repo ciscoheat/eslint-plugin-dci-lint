@@ -9,7 +9,6 @@ const allowedLiteralTypes: string[] = [
   AST_NODE_TYPES.TSStringKeyword,
   AST_NODE_TYPES.TSBooleanKeyword,
   AST_NODE_TYPES.TSBigIntKeyword,
-  AST_NODE_TYPES.TSArrayType,
 ];
 
 export default createRule({
@@ -21,13 +20,18 @@ export default createRule({
         if (!dciContext) return;
 
         for (const role of dciContext.roles.values()) {
-          if (
-            !allowedLiteralTypes.includes(
-              role.id.typeAnnotation?.typeAnnotation.type ?? ""
-            )
-          ) {
+          const contract = role.contract;
+
+          if (contract.type == AST_NODE_TYPES.ObjectExpression) continue;
+
+          let contractType = contract.typeAnnotation;
+          if (contractType.type == AST_NODE_TYPES.TSArrayType) {
+            contractType = contractType.elementType;
+          }
+
+          if (!allowedLiteralTypes.includes(contractType.type)) {
             context.report({
-              loc: role.id.typeAnnotation?.typeAnnotation.loc ?? role.id.loc,
+              loc: contract?.loc ?? role.id.loc,
               messageId: "literal",
             });
           }
@@ -38,14 +42,14 @@ export default createRule({
   meta: {
     docs: {
       description:
-        "Role contracts should be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
-      recommended: "warn",
+        "Role contracts must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+      recommended: "error",
     },
     messages: {
       literal:
-        "Role contracts should be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
+        "Role contracts must be annotated using an object type, array[] or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types",
     },
-    type: "suggestion",
+    type: "problem",
     schema: [],
   },
   defaultOptions: [],

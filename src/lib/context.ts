@@ -8,6 +8,8 @@ import {
   AST_NODE_TYPES,
   Identifier,
   Statement,
+  TSTypeAnnotation,
+  ObjectExpression,
 } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 //import debug from "./debug";
@@ -34,6 +36,7 @@ export interface Role {
   id: Identifier;
   methods: RoleMethod[];
   kind: RoleKind;
+  contract: TSTypeAnnotation | ObjectExpression;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,13 +79,34 @@ export class Context {
       return;
     }
 
-    const potentialRoles = new Map(
-      (
-        func.params.filter(
-          (p) => p.type == AST_NODE_TYPES.Identifier
-        ) as Identifier[]
-      ).map((i) => [i.name, { id: i, kind: "param" as RoleKind }])
-    );
+    const potentialRoles: Map<
+      string,
+      {
+        id: Identifier;
+        kind: RoleKind;
+        contract: ObjectExpression | TSTypeAnnotation;
+      }
+    > = new Map();
+
+    for (const p of func.params) {
+      if (p.type == AST_NODE_TYPES.Identifier && p.typeAnnotation) {
+        potentialRoles.set(p.name, {
+          id: p,
+          kind: "param" as RoleKind,
+          contract: p.typeAnnotation,
+        });
+      } else if (
+        p.type == AST_NODE_TYPES.AssignmentPattern &&
+        p.left.type == AST_NODE_TYPES.Identifier &&
+        p.right.type == AST_NODE_TYPES.ObjectExpression
+      ) {
+        potentialRoles.set(p.left.name, {
+          id: p.left,
+          kind: "param" as RoleKind,
+          contract: p.left.typeAnnotation ?? p.right,
+        });
+      }
+    }
 
     const statements = func.body.body;
 
@@ -91,10 +115,23 @@ export class Context {
       const roleVar = Context.potentialRoleVar(s);
       if (roleVar) {
         for (const id of roleVar.identifiers) {
-          potentialRoles.set(id.name, {
-            id,
-            kind: roleVar.kind,
-          });
+          let contract: TSTypeAnnotation | ObjectExpression | undefined =
+            id.typeAnnotation;
+          if (
+            !contract &&
+            id.parent?.type == AST_NODE_TYPES.VariableDeclarator &&
+            id.parent?.init?.type == AST_NODE_TYPES.ObjectExpression
+          ) {
+            contract = id.parent.init;
+          }
+
+          if (contract) {
+            potentialRoles.set(id.name, {
+              id,
+              kind: roleVar.kind,
+              contract,
+            });
+          }
         }
       }
     }
@@ -162,6 +199,7 @@ export class Context {
             id: role.id,
             kind: role.kind,
             methods: [contextRm],
+            contract: role.contract,
           });
         } else {
           context.report({

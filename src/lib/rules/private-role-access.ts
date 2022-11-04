@@ -27,7 +27,8 @@ export default createRule({
               // Check if we're in the parameters of the Context, access is allowed there
             } else if (
               identifier.parent?.type == AST_NODE_TYPES.VariableDeclarator ||
-              identifier.parent?.type == AST_NODE_TYPES.AssignmentExpression
+              identifier.parent?.type == AST_NODE_TYPES.AssignmentExpression ||
+              identifier.parent?.type == AST_NODE_TYPES.AssignmentPattern
             ) {
               // Check for assignments, that will be handled by the rebinding rule
             } else {

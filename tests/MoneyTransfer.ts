@@ -17,14 +17,44 @@ export function MoneyTransfer(
     increaseBalance(amount: number): void;
   },
 
-  AMOUNT: number
+  Ledgers: { date: Date; amount: number }[],
+
+  AMOUNT: number,
+
+  Source2 = {
+    name: "ABC",
+    decreaseBalance: (amount: number) => {
+      amount;
+    },
+  }
 ) {
   console.log("Before RoleMethods");
+
+  function Source2_test() {
+    Source2.decreaseBalance(1);
+  }
+
+  const OtherLedgers = {
+    date: new Date(),
+    currency: "USD",
+    amount: 123,
+  };
+
+  const OtherLedgers_test = () => {
+    console.log(OtherLedgers.currency == "USD");
+    Source2_test();
+  };
+
+  const Ledgers_balance = () => {
+    OtherLedgers_test();
+    return Ledgers.reduce((acc, curr) => acc + curr.amount, 0);
+  };
 
   const DESTINATION_deposit = () => {
     //console.log(Source.name);
     //Source.decreaseBalance(100);
     //Source__confirm();
+    Ledgers_balance();
     DESTINATION.increaseBalance(AMOUNT);
   };
 
@@ -71,7 +101,7 @@ export function MoneyTransfer(
     Multiple_output = () => console.log(Multiple.test),
     Multiple_output2 = () => {
       console.log(AMOUNT);
-      Multiple_output();
+      Multiple__private();
       //DESTINATION.increaseBalance(123);
     },
     Multiple__private = () => {
@@ -100,6 +130,14 @@ export function MoneyTransfer(
       increaseBalance: (amount) => {
         amount;
       },
+    };
+    // eslint-disable-next-line dci-lint/immutable-roles
+    Ledgers = [];
+
+    // eslint-disable-next-line dci-lint/immutable-roles
+    Source2 = {
+      name: "DEF",
+      decreaseBalance: (amount: number) => amount,
     };
     //Multiple = {test: 234}
   };
@@ -132,7 +170,7 @@ export function MoneyTransfer(
  */
 function HelloWorld(
   Speaker: { phrase: string },
-  World: { log: (msg: unknown) => void }
+  World: { log: typeof console.log }
 ) {
   const Speaker_proclaim = () => World_note(Speaker.phrase);
 
