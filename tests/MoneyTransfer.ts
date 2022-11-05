@@ -18,6 +18,7 @@ export function MoneyTransfer(
   },
 
   Ledgers: { date: Date; amount: number }[],
+  Iter: Iterable<{ date: Date; amount: number }>,
 
   AMOUNT: number,
 
@@ -30,18 +31,36 @@ export function MoneyTransfer(
 ) {
   console.log("Before RoleMethods");
 
-  function Source2_test() {
-    Source2.decreaseBalance(1);
+  function Iter_test() {
+    for (const obj of Iter) {
+      obj.amount;
+    }
   }
 
-  const OtherLedgers = {
-    date: new Date(),
-    currency: "USD",
-    amount: 123,
-  };
+  function Source2_test() {
+    Source2.decreaseBalance(1);
+    Iter_test();
+    EmptyArray_test();
+  }
+
+  const EmptyArray: number[] = [];
+
+  function EmptyArray_test() {
+    EmptyArray.push(123);
+  }
+
+  const OtherLedgers = [
+    {
+      date: new Date(),
+      currency: "USD",
+      amount: 123,
+    },
+    234,
+  ];
 
   const OtherLedgers_test = () => {
-    console.log(OtherLedgers.currency == "USD");
+    if (typeof OtherLedgers[0] !== "number")
+      console.log(OtherLedgers[0].currency == "USD");
     Source2_test();
   };
 
@@ -140,6 +159,8 @@ export function MoneyTransfer(
       decreaseBalance: (amount: number) => amount,
     };
     //Multiple = {test: 234}
+    // eslint-disable-next-line dci-lint/immutable-roles
+    Iter = [];
   };
 
   /*
