@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node16-strictest/tsconfig.json",
-  "include": ["src/**/*.ts", "tests/lib/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "outDir": "lib",

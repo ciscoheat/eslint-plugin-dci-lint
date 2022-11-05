@@ -1,6 +1,9 @@
 /**
  * This is a file that tests the linter.
+ * All comments with no space between // and the end of the line will be
+ * tested in a failing test.
  */
+
 const a = 213;
 a;
 
@@ -62,7 +65,12 @@ export function MoneyTransfer(
     if (typeof OtherLedgers[0] !== "number")
       console.log(OtherLedgers[0].currency == "USD");
     Source2_test();
+    NullRole_name();
   };
+
+  // eslint-disable-next-line dci-lint/immutable-roles
+  let NullRole: { name: string };
+  const NullRole_name = () => NullRole.name;
 
   const Ledgers_balance = () => {
     OtherLedgers_test();
@@ -161,17 +169,12 @@ export function MoneyTransfer(
     //Multiple = {test: 234}
     // eslint-disable-next-line dci-lint/immutable-roles
     Iter = [];
+
+    // eslint-disable-next-line dci-lint/immutable-roles
+    NullRole = { name: "notnull" };
   };
 
-  /*
-  function rebind2() {
-    NEWAMOUNT = {
-      confirm2: () => {
-        //
-      },
-    };
-  }
-  */
+  //function rebind2() { NEWAMOUNT = { confirm2: () => { /**/ }, }; }
 
   rebind();
 

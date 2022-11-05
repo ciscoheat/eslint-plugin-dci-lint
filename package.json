@@ -20,13 +20,14 @@
     "prepublishOnly": "tsc",
     "dev": "tsc-watch --onSuccess \"pnpm lint\"",
     "lint": "eslint .",
-    "test": "mocha tests --recursive"
+    "test": "node tests/tests.mjs"
   },
   "devDependencies": {
     "@tsconfig/node16-strictest": "^1.0.4",
     "@tsconfig/recommended": "^1.0.1",
     "@types/debug": "^4.1.7",
     "@types/esquery": "^1.0.2",
+    "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.11.8",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
@@ -36,6 +37,7 @@
     "eslint-plugin-eslint-plugin": "^5.0.6",
     "eslint-plugin-node": "^11.1.0",
     "esquery": "^1.4.0",
+    "fs-extra": "^10.1.0",
     "mocha": "^10.1.0",
     "tsc-watch": "^5.0.3",
     "typescript": "^4.8.4"
