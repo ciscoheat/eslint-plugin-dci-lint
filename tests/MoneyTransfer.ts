@@ -87,9 +87,10 @@ export function MoneyTransfer(
 
   // Disable so rebinding works.
   // eslint-disable-next-line dci-lint/immutable-roles
-  let NEWAMOUNT: {
+  let NEWAMOUNT: Readonly<{
     confirm2: () => void;
-  } = { confirm2: () => console.log(AMOUNT * 2) };
+    amount: number;
+  }> = { confirm2: () => console.log(AMOUNT * 2), amount: 123 };
 
   const NEWAMOUNT_test = () => {
     NEWAMOUNT.confirm2();
@@ -144,6 +145,7 @@ export function MoneyTransfer(
       confirm2: () => {
         /* */
       },
+      amount: 456,
     };
     // eslint-disable-next-line dci-lint/immutable-roles
     Source = {

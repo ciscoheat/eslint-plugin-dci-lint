@@ -8,7 +8,7 @@ import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 const errorMsg =
-  "Role contracts must be defined using an object type, array[], Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
+  "Role contracts must be defined using an object type, Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
 
 const allowedLiteralTypes = new Set([
   AST_NODE_TYPES.TSTypeLiteral,
@@ -23,7 +23,15 @@ const allowedExpressionTypes = new Set([
   AST_NODE_TYPES.ObjectExpression,
 ]);
 
-const allowedTypeParameters = new Set(["Iterable", "Array", "Map", "Set"]);
+const allowedTypeParameters = new Set([
+  "Iterable",
+  "Array",
+  "Map",
+  "Set",
+  "Readonly",
+  "NonNullable",
+  "Awaited",
+]);
 
 const checkTypeNode = (contractType: TypeNode): TypeNode[] => {
   if (contractType.type == AST_NODE_TYPES.TSUnionType) {
