@@ -10,18 +10,38 @@ import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generate
 const errorMsg =
   "Role contracts must be defined using an object type, array[], Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
 
-const allowedLiteralTypes: string[] = [
+const allowedLiteralTypes = new Set([
   AST_NODE_TYPES.TSTypeLiteral,
   AST_NODE_TYPES.TSNumberKeyword,
   AST_NODE_TYPES.TSStringKeyword,
   AST_NODE_TYPES.TSBooleanKeyword,
   AST_NODE_TYPES.TSBigIntKeyword,
-];
+]);
 
-const allowedExpressionTypes: string[] = [
+const allowedExpressionTypes = new Set([
   AST_NODE_TYPES.Literal,
   AST_NODE_TYPES.ObjectExpression,
-];
+]);
+
+const allowedTypeParameters = new Set(["Iterable", "Array", "Map", "Set"]);
+
+const checkTypeNode = (contractType: TypeNode): TypeNode[] => {
+  if (contractType.type == AST_NODE_TYPES.TSUnionType) {
+    return contractType.types.flatMap(checkTypeNode);
+  } else if (contractType.type == AST_NODE_TYPES.TSArrayType) {
+    return checkTypeNode(contractType.elementType);
+  } else if (
+    contractType.type == AST_NODE_TYPES.TSTypeReference &&
+    contractType.typeName.type == AST_NODE_TYPES.Identifier &&
+    allowedTypeParameters.has(contractType.typeName.name) &&
+    contractType.typeParameters?.params &&
+    contractType.typeParameters?.params.length > 0
+  ) {
+    return contractType.typeParameters.params.flatMap(checkTypeNode);
+  } else {
+    return [contractType];
+  }
+};
 
 export default createRule({
   name: "literal-role-contracts",
@@ -43,22 +63,14 @@ export default createRule({
           if (!contract) {
             error();
           } else if (contract.type == AST_NODE_TYPES.TSTypeAnnotation) {
-            const contractType = contract.typeAnnotation;
-            let nodeToCheck: TypeNode = contractType;
+            const nodesToCheck: TypeNode[] = checkTypeNode(
+              contract.typeAnnotation
+            );
 
-            if (contractType.type == AST_NODE_TYPES.TSArrayType) {
-              nodeToCheck = contractType.elementType;
-            } else if (
-              contractType.type == AST_NODE_TYPES.TSTypeReference &&
-              contractType.typeName.type == AST_NODE_TYPES.Identifier &&
-              contractType.typeName.name == "Iterable" &&
-              contractType.typeParameters?.params.length == 1
-            ) {
-              nodeToCheck = contractType.typeParameters.params[0] as TypeNode;
-            }
-
-            if (!allowedLiteralTypes.includes(nodeToCheck.type)) {
-              error();
+            for (const typeNode of nodesToCheck) {
+              if (!allowedLiteralTypes.has(typeNode.type)) {
+                error();
+              }
             }
           } else {
             let exprsToCheck = [contract];
@@ -73,7 +85,7 @@ export default createRule({
             }
 
             for (const expr of exprsToCheck) {
-              if (!allowedExpressionTypes.includes(expr.type)) error();
+              if (!allowedExpressionTypes.has(expr.type)) error();
             }
           }
         }
