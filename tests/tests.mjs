@@ -54,7 +54,7 @@ try {
   const failingFile = (await fs.readFile(file, {encoding:'utf-8'})).replaceAll(/\/\/(\w)/g, '$1')
   fs.outputFileSync(failing, failingFile)
 
-  await test(failing, 19, 5)
+  await test(failing, 19, 3)
 } finally {
   await fs.remove(failing)
 }

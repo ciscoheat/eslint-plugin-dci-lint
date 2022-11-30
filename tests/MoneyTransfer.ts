@@ -10,7 +10,7 @@ a;
 /**
  * @DCI-context
  */
-export function MoneyTransfer(
+export async function MoneyTransfer(
   Source: {
     name: string;
     decreaseBalance(amount: number): void;
@@ -68,7 +68,6 @@ export function MoneyTransfer(
     NullRole_name();
   };
 
-  // eslint-disable-next-line dci-lint/immutable-roles
   let NullRole: { name: string };
   const NullRole_name = () => NullRole.name;
 
@@ -85,8 +84,6 @@ export function MoneyTransfer(
     DESTINATION.increaseBalance(AMOUNT);
   };
 
-  // Disable so rebinding works.
-  // eslint-disable-next-line dci-lint/immutable-roles
   let NEWAMOUNT: Readonly<{
     confirm2: () => void;
     amount: number;
@@ -139,40 +136,32 @@ export function MoneyTransfer(
   AMOUNT = 123;
 
   const rebind = () => {
-    // Disable so rebinding works
-    // eslint-disable-next-line dci-lint/immutable-roles
     NEWAMOUNT = {
       confirm2: () => {
         /* */
       },
       amount: 456,
     };
-    // eslint-disable-next-line dci-lint/immutable-roles
     Source = {
       decreaseBalance: (amount) => {
         amount;
       },
       name: "newSource",
     };
-    // eslint-disable-next-line dci-lint/immutable-roles
     DESTINATION = {
       increaseBalance: (amount) => {
         amount;
       },
     };
-    // eslint-disable-next-line dci-lint/immutable-roles
     Ledgers = [];
 
-    // eslint-disable-next-line dci-lint/immutable-roles
     Source2 = {
       name: "DEF",
       decreaseBalance: (amount: number) => amount,
     };
     //Multiple = {test: 234}
-    // eslint-disable-next-line dci-lint/immutable-roles
     Iter = [];
 
-    // eslint-disable-next-line dci-lint/immutable-roles
     NullRole = { name: "notnull" };
   };
 

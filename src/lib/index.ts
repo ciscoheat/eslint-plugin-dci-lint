@@ -14,8 +14,7 @@ const rules: Array<[string, "error" | "warn" | "off"]> = [
   ["atomic-role-binding", "error"],
   ["literal-role-contracts", "error"],
 
-  ["immutable-roles", "warn"],
-
+  ["immutable-roles", "off"],
   ["sorted-rolemethods", "off"],
 ];
 

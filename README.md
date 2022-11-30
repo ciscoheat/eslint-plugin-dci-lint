@@ -49,20 +49,15 @@ These rules should not be turned off. [Let me know](https://github.com/ciscoheat
 
 - `dci-lint/atomic-role-binding` - All RoleMethods must be bound (assigned) in the same function. Not applicable if `dci-lint/immutable-roles` is enabled.
 - `dci-lint/grouped-rolemethods` - RoleMethods must be grouped together, without unrelated code between them.
-- `dci-lint/literal-role-contracts` - Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). Can be turned off, but that can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code.
+- `dci-lint/literal-role-contracts` - Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). Turning it off can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code.
 - `dci-lint/no-this-in-context` - Disallows `this` in Contexts.
 - `dci-lint/private-role-access` - Private RoleMethods and Role contracts can only be accessed within their own Roles.
-
-### Warnings
-
-These rules are optional, but only turn them off if you have a good reason.
-
-- `dci-lint/immutable-roles` - Prevents reassigning of Roles. Can be turned off if you don't assign Roles directly in the Context parameters, instead binding (assigning) them elsewhere in the Context.
 
 ### Optional
 
 These rules are optional and are off as default.
 
+- `dci-lint/immutable-roles` - Enforces all Roles to be `const`.
 - `dci-lint/sorted-rolemethods` - RoleMethods must be placed in alphabetical order.
 
 ## More information
