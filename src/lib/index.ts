@@ -12,7 +12,8 @@ const rules: Array<[string, "error" | "warn" | "off"]> = [
   ["no-this-in-context", "error"],
   ["private-role-access", "error"],
   ["atomic-role-binding", "error"],
-  ["literal-role-contracts", "error"],
+
+  ["literal-role-contracts", "warn"],
 
   ["immutable-roles", "off"],
   ["sorted-rolemethods", "off"],

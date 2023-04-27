@@ -41,7 +41,7 @@ export default createRule({
     docs: {
       description:
         "A Role should be immutable, to prevent reassignment when the Context is executing.",
-      recommended: "warn",
+      recommended: false,
     },
     messages: {
       notImmutableVar: `A Role should be immutable, to prevent reassignment when the Context is executing. Use "const" instead.`,

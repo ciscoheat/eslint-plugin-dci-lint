@@ -161,7 +161,7 @@ export class Context {
     }
 
     // Check if a function is a RoleMethod
-    for (const [name, expr] of functions) {
+    for (const [name, expr] of functions.entries()) {
       const rm = this.roleMethodCall(name);
       if (!rm) continue;
 

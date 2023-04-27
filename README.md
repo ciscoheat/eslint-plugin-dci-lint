@@ -7,13 +7,13 @@ A typescript ESLint plugin that helps you adhere to DCI conventions. For more in
 You'll first need to install [ESLint](https://eslint.org/) and the required typescript packages:
 
 ```sh
-npm i --save-dev @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
+npm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
 ```
 
 Next, install `eslint-plugin-dci-lint`:
 
 ```sh
-npm i --save-dev eslint-plugin-dci-lint
+npm i -D eslint-plugin-dci-lint
 ```
 
 ## Configuration
@@ -30,6 +30,9 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
   root: true,
+  rules: {
+    //"dci-lint/literal-role-contracts": "off"
+  },
 };
 ```
 
@@ -49,11 +52,14 @@ These rules should not be turned off. [Let me know](https://github.com/ciscoheat
 
 - `dci-lint/atomic-role-binding` - All RoleMethods must be bound (assigned) in the same function. Not applicable if `dci-lint/immutable-roles` is enabled.
 - `dci-lint/grouped-rolemethods` - RoleMethods must be grouped together, without unrelated code between them.
-- `dci-lint/literal-role-contracts` - Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). Turning it off can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code.
 - `dci-lint/no-this-in-context` - Disallows `this` in Contexts.
 - `dci-lint/private-role-access` - Private RoleMethods and Role contracts can only be accessed within their own Roles.
 
 ### Optional
+
+These rules are optional but are set to `warn` as default.
+
+- `dci-lint/literal-role-contracts` - Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). Turning it off can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code, but can be convenient if you're working with a standardized API like the W3C web standards.
 
 These rules are optional and are off as default.
 

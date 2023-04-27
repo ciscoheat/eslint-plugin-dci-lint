@@ -86,7 +86,7 @@ export default createRule({
               contract.type == AST_NODE_TYPES.ArrayExpression &&
               contract.elements.length > 0 &&
               !contract.elements.some(
-                (e) => e.type == AST_NODE_TYPES.SpreadElement
+                (e) => e && e.type == AST_NODE_TYPES.SpreadElement
               )
             ) {
               exprsToCheck = contract.elements as Expression[];
@@ -103,7 +103,7 @@ export default createRule({
   meta: {
     docs: {
       description: errorMsg,
-      recommended: "error",
+      recommended: "warn",
     },
     messages: {
       literal: errorMsg,

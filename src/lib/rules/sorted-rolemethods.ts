@@ -48,7 +48,7 @@ export default createRule({
   meta: {
     docs: {
       description: "RoleMethods should be sorted alphabetically.",
-      recommended: "warn",
+      recommended: false,
     },
     messages: {
       unsorted: "RoleMethods should be sorted alphabetically.",
