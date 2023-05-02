@@ -169,6 +169,11 @@ export async function MoneyTransfer(
 
   rebind();
 
+  passRoleOn(DESTINATION); //OK
+  passRoleOn(DESTINATION, 123); //OK
+  //passRoleOn(DESTINATION.increaseBalance, 123); //NO
+  //passRoleOn(DESTINATION.increaseBalance(123)); //NO
+
   //SOURCE.decreaseBalance(100);
   //SOURCE__confirm();
   Source_withdraw();
@@ -177,6 +182,10 @@ export async function MoneyTransfer(
     start: () => Source_withdraw(),
     //illegalAccess: Source__confirm,
   };
+}
+
+function passRoleOn(destination: unknown, other?: unknown) {
+  return { destination, other };
 }
 
 /**

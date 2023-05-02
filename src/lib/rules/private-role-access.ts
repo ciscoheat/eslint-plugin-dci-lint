@@ -31,6 +31,11 @@ export default createRule({
               identifier.parent?.type == AST_NODE_TYPES.AssignmentPattern
             ) {
               // Check for assignments, that will be handled by the rebinding rule
+            } else if (
+              identifier.parent?.type == AST_NODE_TYPES.CallExpression
+            ) {
+              // Check for passing the Roles to a function, that is allowed for
+              // simplifying complicated Contexts
             } else {
               context.report({
                 node: identifier,
