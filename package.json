@@ -17,7 +17,7 @@
   "exports": "./lib/index.js",
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "tsc && npm run test",
     "dev": "tsc-watch --onSuccess \"pnpm lint\"",
     "lint": "eslint .",
     "test": "node tests/tests.mjs"
