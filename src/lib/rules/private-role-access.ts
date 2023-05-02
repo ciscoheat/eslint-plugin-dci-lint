@@ -32,7 +32,8 @@ export default createRule({
             ) {
               // Check for assignments, that will be handled by the rebinding rule
             } else if (
-              identifier.parent?.type == AST_NODE_TYPES.CallExpression
+              identifier.parent?.type == AST_NODE_TYPES.CallExpression ||
+              identifier.parent?.type == AST_NODE_TYPES.Property
             ) {
               // Check for passing the Roles to a function, that is allowed for
               // simplifying complicated Contexts

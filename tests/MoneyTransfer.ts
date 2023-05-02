@@ -174,8 +174,13 @@ export async function MoneyTransfer(
 
   rebind();
 
+  const output = {
+    dest: DESTINATION,
+    //dest2: DESTINATION.increaseBalance,
+  };
+
   passRoleOn(DESTINATION); //OK
-  passRoleOn(DESTINATION, 123); //OK
+  passRoleOn(DESTINATION, output); //OK
   //passRoleOn(DESTINATION.increaseBalance, 123); //NO
   //passRoleOn(DESTINATION.increaseBalance(123)); //NO
 

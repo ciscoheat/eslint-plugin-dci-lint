@@ -25,6 +25,8 @@ async function test(file, errorsWanted = 0, warningsWanted = 0) {
     const parsed = search.exec(stdout);
     if (!parsed.groups) throw new Error("No result found in eslint output");
 
+    if (parsed.input.includes("Parsing error:")) throw new Error(parsed.input);
+
     result = {
       errors: parseInt(parsed.groups.errors) ?? 1000,
       warnings: parseInt(parsed.groups.warnings) ?? 1000,
@@ -58,7 +60,7 @@ try {
   ).replaceAll(/\/\/(\w)/g, "$1");
   fs.outputFileSync(failing, failingFile);
 
-  await test(failing, 21, 3);
+  await test(failing, 22, 3);
 } finally {
   await fs.remove(failing);
 }
