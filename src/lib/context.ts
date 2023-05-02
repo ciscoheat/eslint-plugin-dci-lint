@@ -163,7 +163,7 @@ export class Context {
     // Check if a function is a RoleMethod
     for (const [name, expr] of functions.entries()) {
       const rm = this.roleMethodCall(name);
-      if (!rm) continue;
+      if (!rm || !rm.role.length) continue;
 
       if (expr.decl && expr.decl.kind !== "const") {
         context.report({

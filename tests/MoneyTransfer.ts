@@ -127,6 +127,7 @@ export async function MoneyTransfer(
     Multiple_output2 = () => {
       console.log(AMOUNT);
       Multiple__private();
+      _underscore();
       //DESTINATION.increaseBalance(123);
     },
     Multiple__private = () => {
@@ -166,6 +167,10 @@ export async function MoneyTransfer(
   };
 
   //function rebind2() { NEWAMOUNT = { confirm2: () => { /**/ }, }; }
+
+  function _underscore() {
+    return 123;
+  }
 
   rebind();
 
