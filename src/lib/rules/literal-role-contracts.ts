@@ -8,7 +8,7 @@ import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
 import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 
 const errorMsg =
-  "Role contracts must be defined using an object type, Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
+  "Role contracts should be defined using an object type, Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
 
 const allowedLiteralTypes = new Set([
   AST_NODE_TYPES.TSTypeLiteral,
@@ -108,7 +108,7 @@ export default createRule({
     messages: {
       literal: errorMsg,
     },
-    type: "problem",
+    type: "suggestion",
     schema: [],
   },
   defaultOptions: [],
