@@ -1,17 +1,14 @@
+import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
-import {
-  AST_NODE_TYPES,
-  SourceLocation,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
 import { Context, Role, RoleMethod } from "../context";
 
 //import debug from "../debug";
 //const d = debug("grouped-rolemethods");
 
 type OrderedStatement =
-  | { method: RoleMethod; loc: SourceLocation }
-  | { role: Role; loc: SourceLocation }
-  | { loc: SourceLocation };
+  | { method: RoleMethod; loc: TSESTree.SourceLocation }
+  | { role: Role; loc: TSESTree.SourceLocation }
+  | { loc: TSESTree.SourceLocation };
 
 export default createRule({
   name: "grouped-rolemethods",
@@ -62,7 +59,7 @@ export default createRule({
         const usedRoles = new Set<string>();
         const declaredRoles = new Set<string>();
         let currentRole = "";
-        let otherCodeUsed: SourceLocation | undefined;
+        let otherCodeUsed: TSESTree.SourceLocation | undefined;
 
         for (const code of statements) {
           if (otherCodeUsed && ("method" in code || "role" in code)) {
@@ -112,7 +109,7 @@ export default createRule({
     docs: {
       description:
         "RoleMethods must come after one another, they cannot be mixed with other code in the Context.",
-      recommended: "error",
+      recommended: "recommended",
     },
     messages: {
       unordered:

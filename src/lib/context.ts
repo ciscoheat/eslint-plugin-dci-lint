@@ -1,16 +1,5 @@
-import type {
-  FunctionDeclaration,
-  ArrowFunctionExpression,
-  VariableDeclaration,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
-import type { RuleContext } from "@typescript-eslint/utils/dist/ts-eslint";
-import {
-  AST_NODE_TYPES,
-  Identifier,
-  Statement,
-  TSTypeAnnotation,
-  Expression,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
+import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
+import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 
 //import debug from "./debug";
 //const d = debug("context");
@@ -18,7 +7,9 @@ import {
 // TODO: Role name checking rule
 // TODO: Role splitting config setting
 
-export type RoleMethodFunction = FunctionDeclaration | ArrowFunctionExpression;
+export type RoleMethodFunction =
+  | TSESTree.FunctionDeclaration
+  | TSESTree.ArrowFunctionExpression;
 export type RoleKind = "const" | "let" | "var" | "param";
 
 export interface RoleMethodCall {
@@ -33,11 +24,11 @@ export interface RoleMethod extends RoleMethodCall {
 
 export interface Role {
   name: string;
-  id: Identifier;
+  id: TSESTree.Identifier;
   methods: RoleMethod[];
   kind: RoleKind;
   // The Role type
-  contract: TSTypeAnnotation | Expression | undefined;
+  contract: TSESTree.TSTypeAnnotation | TSESTree.Expression | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,11 +45,11 @@ export class Context {
   private funcMap = new Map<RoleMethodFunction, RoleMethod>();
   private funcNameMap = new Map<string, RoleMethod>();
 
-  static potentialRoleVar(node: Statement) {
+  static potentialRoleVar(node: TSESTree.Statement) {
     if (node.type != AST_NODE_TYPES.VariableDeclaration) return null;
     const identifiers = node.declarations
       .filter((d) => d.id.type == AST_NODE_TYPES.Identifier)
-      .map((d) => d.id as Identifier);
+      .map((d) => d.id as TSESTree.Identifier);
 
     return { identifiers, kind: node.kind };
   }
@@ -134,7 +125,7 @@ export class Context {
 
     const functions = new Map<
       string,
-      { func: RoleMethodFunction; decl: VariableDeclaration | null }
+      { func: RoleMethodFunction; decl: TSESTree.VariableDeclaration | null }
     >();
     for (const s of statements) {
       if (s.type == AST_NODE_TYPES.FunctionDeclaration) {
@@ -148,7 +139,7 @@ export class Context {
             continue;
           }
           // Type definition is wrong, name exists on the Identifier.
-          const name = (declaration.id as Identifier).name;
+          const name = (declaration.id as TSESTree.Identifier).name;
           if (!name) {
             context.report({
               loc: declaration.loc,

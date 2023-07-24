@@ -1,15 +1,11 @@
-import {
-  AST_NODE_TYPES,
-  BlockStatement,
-  Identifier,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
+import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { createRule, contextRules, isInContext } from "../DCIRuleHelpers";
 
 export default createRule({
   name: "atomic-role-binding",
   create(context) {
     return contextRules(context, {
-      BlockStatement(node: BlockStatement) {
+      BlockStatement(node: TSESTree.BlockStatement) {
         const dciContext = isInContext();
         if (!dciContext) return;
 
@@ -25,7 +21,7 @@ export default createRule({
               ? s.expression.left
               : null;
           })
-          .filter((s) => !!s) as Identifier[];
+          .filter((s) => !!s) as TSESTree.Identifier[];
 
         // Filter out duplicates
         const assignmentMap = new Map(assignments.map((a) => [a.name, a]));
@@ -58,7 +54,7 @@ export default createRule({
   meta: {
     docs: {
       description: "All Roles must be bound (reassigned) in the same function.",
-      recommended: "error",
+      recommended: "strict",
     },
     messages: {
       tooFew: `All Roles must be bound (reassigned) in the same function. Missing: {{missing}}`,

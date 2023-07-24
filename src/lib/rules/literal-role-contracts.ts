@@ -1,13 +1,7 @@
-import {
-  AST_NODE_TYPES,
-  Expression,
-  TypeNode,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
-
+import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
-import type { FunctionDeclaration } from "@typescript-eslint/types/dist/generated/ast-spec";
 
-const errorMsg =
+const description =
   "Role contracts should be defined using an object type, Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
 
 const allowedLiteralTypes = new Set([
@@ -33,7 +27,9 @@ const allowedTypeParameters = new Set([
   "Awaited",
 ]);
 
-const checkTypeNode = (contractType: TypeNode): TypeNode[] => {
+const checkTypeNode = (
+  contractType: TSESTree.TypeNode
+): TSESTree.TypeNode[] => {
   if (contractType.type == AST_NODE_TYPES.TSUnionType) {
     return contractType.types.flatMap(checkTypeNode);
   } else if (contractType.type == AST_NODE_TYPES.TSArrayType) {
@@ -55,7 +51,7 @@ export default createRule({
   name: "literal-role-contracts",
   create(context) {
     return contextRules(context, {
-      FunctionDeclaration(node: FunctionDeclaration) {
+      FunctionDeclaration(node: TSESTree.FunctionDeclaration) {
         const dciContext = isContext(node);
         if (!dciContext) return;
 
@@ -71,7 +67,7 @@ export default createRule({
           if (!contract) {
             error();
           } else if (contract.type == AST_NODE_TYPES.TSTypeAnnotation) {
-            const nodesToCheck: TypeNode[] = checkTypeNode(
+            const nodesToCheck: TSESTree.TypeNode[] = checkTypeNode(
               contract.typeAnnotation
             );
 
@@ -89,7 +85,7 @@ export default createRule({
                 (e) => e && e.type == AST_NODE_TYPES.SpreadElement
               )
             ) {
-              exprsToCheck = contract.elements as Expression[];
+              exprsToCheck = contract.elements as TSESTree.Expression[];
             }
 
             for (const expr of exprsToCheck) {
@@ -102,11 +98,11 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: errorMsg,
-      recommended: "warn",
+      description,
+      recommended: "recommended",
     },
     messages: {
-      literal: errorMsg,
+      literal: description,
     },
     type: "suggestion",
     schema: [],

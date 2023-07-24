@@ -1,12 +1,8 @@
-import { ESLintUtils } from "@typescript-eslint/utils";
-import type { RuleListener } from "@typescript-eslint/utils/dist/ts-eslint";
+import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
 import { Context, GenericRuleContext, RoleMethodFunction } from "./context";
 import type { RoleMethod } from "./context";
 import debug from "./debug";
-import type {
-  FunctionDeclaration,
-  ArrowFunctionExpression,
-} from "@typescript-eslint/types/dist/generated/ast-spec";
+import { RuleListener } from "@typescript-eslint/utils/ts-eslint";
 
 const d = debug("rules");
 
@@ -105,9 +101,9 @@ export const contextRules = (
   rule[" FunctionDeclaration:exit"] = exitFunction;
   rule[" ArrowFunctionExpression:exit"] = exitFunction;
 
-  rule[" FunctionDeclaration"] = (func: FunctionDeclaration) =>
+  rule[" FunctionDeclaration"] = (func: TSESTree.FunctionDeclaration) =>
     enterFunction(func, context);
-  rule[" ArrowFunctionExpression"] = (func: ArrowFunctionExpression) =>
+  rule[" ArrowFunctionExpression"] = (func: TSESTree.ArrowFunctionExpression) =>
     enterFunction(func, context);
 
   return rule;

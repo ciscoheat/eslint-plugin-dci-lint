@@ -16,7 +16,7 @@ export default createRule({
   meta: {
     docs: {
       description: `"this" should not be used inside a Context.`,
-      recommended: "error",
+      recommended: "recommended",
     },
     messages: {
       noThis: `"this" should not be used inside a Context.`,

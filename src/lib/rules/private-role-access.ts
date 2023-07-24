@@ -4,17 +4,16 @@ import {
   isInContext,
   isInRoleMethod,
 } from "../DCIRuleHelpers";
-import type { Identifier } from "@typescript-eslint/types/dist/generated/ast-spec";
-import { AST_NODE_TYPES } from "@typescript-eslint/types/dist/generated/ast-spec";
-import debug from "../debug";
+import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 
-const d = debug("private-role-access");
+//import debug from "../debug";
+//const d = debug("private-role-access");
 
 export default createRule({
   name: "private-role-access",
   create(context) {
     return contextRules(context, {
-      Identifier(identifier: Identifier) {
+      Identifier(identifier: TSESTree.Identifier) {
         const dciContext = isInContext();
         if (!dciContext) return;
 
@@ -52,8 +51,8 @@ export default createRule({
           if (identifier.parent?.type == AST_NODE_TYPES.VariableDeclarator) {
             // Skip if it's not the definition itself.
           } else if (rm.isPrivate && rm.role != currentRM?.role) {
-            d(rm, { depth: 1 });
-            d(currentRM, { depth: 1 });
+            //d(rm, { depth: 1 });
+            //d(currentRM, { depth: 1 });
             context.report({
               node: identifier,
               messageId: "privateCall",
@@ -66,7 +65,7 @@ export default createRule({
   meta: {
     docs: {
       description: "The Role can only be accessed through its own RoleMethods.",
-      recommended: "error",
+      recommended: "strict",
     },
     messages: {
       privateCall: "Accessing a private RoleMethod outside its Role.",
