@@ -1,6 +1,6 @@
 # eslint-plugin-dci-lint
 
-This is a **TypeScript** ESLint plugin that helps you adhere to DCI conventions. For more information about DCI (Data, Context and Interaction), see [https://fulloo.info](https://fulloo.info).
+This is a **TypeScript** ESLint plugin that helps you adhere to DCI conventions. For more information about DCI (Data, Context and Interaction), read [this introduction](https://blog.encodeart.dev/dci-tutorial-for-typescript-part-1).
 
 ## Installation
 
@@ -54,25 +54,39 @@ A comprehensive tutorial series is available at [https://blog.encodeart.dev/dci-
 
 ## Supported Rules
 
-### Errors
+### Required
 
 These rules should not be turned off. [Let me know](https://github.com/ciscoheat/eslint-plugin-dci-lint/issues) if you have a good reason to do so.
 
-- `dci-lint/atomic-role-binding` - All RoleMethods must be bound (assigned) in the same function. Not applicable if `dci-lint/immutable-roles` is enabled.
-- `dci-lint/grouped-rolemethods` - RoleMethods must be grouped together, without unrelated code between them.
-- `dci-lint/no-this-in-context` - Disallows `this` in Contexts.
-- `dci-lint/private-role-access` - Private RoleMethods and Role contracts can only be accessed within their own Roles.
+| Rule                           | Usage                                                                               |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| `dci-lint/atomic-role-binding` | All RoleMethods must be bound (assigned) in the same function.                      |
+| `dci-lint/grouped-rolemethods` | RoleMethods must be grouped together, without unrelated code between them.          |
+| `dci-lint/no-this-in-context`  | Disallows `this` in Contexts.                                                       |
+| `dci-lint/private-role-access` | Private RoleMethods and Role contracts can only be accessed within their own Roles. |
 
 ### Optional
 
 These rules are optional but are set to `warn` as default.
 
-- `dci-lint/literal-role-contracts` - Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). Turning it off can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code, but can be convenient if you're working with a standardized API like the W3C web standards.
+| Rule                              | Usage                                                                                                                                                                                                                                                                                                                                                          |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dci-lint/literal-role-contracts` | Role contracts should be defined as an [object type](https://www.typescriptlang.org/docs/handbook/2/objects.html), [primitive type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean) or an [array](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#arrays) (in bracket syntax). |
 
-These rules are optional and are off as default.
+Turning this rule off can undermine the readability of the Context by requiring knowledge about types defined elsewhere in the code, but it can be convenient if you're working with a standardized API like the W3C web standards.
 
-- `dci-lint/immutable-roles` - Enforces all Roles to be `const`.
-- `dci-lint/sorted-rolemethods` - RoleMethods must be placed in alphabetical order.
+Additionally, a few other standard types are allowed as non-literal types for Roles:
+
+`Iterable` | `Array` | `Map` | `Set` | `Readonly` | `NonNullable` | `Awaited`
+
+### Disabled
+
+These rules are optional and are disabled as default.
+
+| Rule                          | Usage                                             |
+| ----------------------------- | ------------------------------------------------- |
+| `dci-lint/immutable-roles`    | Enforces all Roles to be `const`.                 |
+| `dci-lint/sorted-rolemethods` | RoleMethods must be placed in alphabetical order. |
 
 ## More information
 
@@ -87,6 +101,26 @@ For VS Code, there are also some useful snippets in the [typescript.json](https:
 - Paste the contents of the file there.
 
 You can now use the keywords "context", "role" and "rm" in `.ts` files to quickly generate Contexts, Roles and RoleMethods.
+
+## Test example
+
+Paste this code in a `.ts` file to test if the plugin works with the linter. An error, "Accessing Role contract outside its own RoleMethods" should appear.
+
+```ts
+/**
+ * @DCI-context
+ */
+export function Test() {
+  const FirstRole = { name: "Test" };
+
+  function FirstRole_method() {
+    return FirstRole.name;
+  }
+
+  console.log(FirstRole.name); // Accessing Role contract outside its own RoleMethods.
+  return FirstRole_method();
+}
+```
 
 ## Comments, ideas, issues
 
