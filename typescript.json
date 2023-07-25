@@ -1,0 +1,62 @@
+{
+  "DCI Context": {
+    "prefix": ["context", "dci"],
+    "body": [
+      "/**",
+      " * @DCI-context",
+      " * Ctrl+K Ctrl+8 folds all Roles.",
+      " * Ctrl+K Ctrl+- folds all Roles except the current.",
+      " */",
+      "function ${1:ContextName}(${2:FirstRole}) {",
+      "  //#region Context state /////",
+      "",
+      "  const Context = {}",
+      "",
+      "  //#endregion",
+      "",
+      "  //#region $2 /////",
+      "",
+      "  function $2_method() {",
+      "    // Access $2 here",
+      "    $3_method()",
+      "  }",
+      "",
+      "  //#endregion",
+      "",
+      "  //#region ${3:SecondRole} /////",
+      "",
+      "  const $3 = {}",
+      "",
+      "  function $3_method() {",
+      "    // Access $3 here",
+      "  }",
+      "",
+      "  //#endregion",
+      "",
+      "  return {",
+      "    start: () => {",
+      "      $2_method()",
+      "    }",
+      "  }",
+      "}"
+    ]
+  },
+  "DCI Role": {
+    "prefix": ["role"],
+    "body": [
+      "//#region ${1:NewRole} /////",
+      "",
+      "const $1 = {}",
+      "",
+      "function $1_method() {",
+      "  // Access $1 here",
+      "}",
+      "",
+      "//#endregion"
+    ]
+  },
+  "DCI RoleMethod": {
+    "prefix": ["rm", "rolemethod"],
+    "body": ["function ${1:Role}_${2:method}() {", "  $0", "}"]
+  }
+}

@@ -1,13 +1,17 @@
 # eslint-plugin-dci-lint
 
-A typescript ESLint plugin that helps you adhere to DCI conventions. For more information about DCI (Data, Context and Interaction), see [https://fulloo.info](https://fulloo.info).
+This is a **TypeScript** ESLint plugin that helps you adhere to DCI conventions. For more information about DCI (Data, Context and Interaction), see [https://fulloo.info](https://fulloo.info).
 
 ## Installation
 
-You'll first need to install [ESLint](https://eslint.org/) and the required typescript packages:
+You'll first need to install [typescript-eslint](https://typescript-eslint.io/) and its required packages:
 
 ```sh
 npm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
+```
+
+```sh
+pnpm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
 ```
 
 Next, install `eslint-plugin-dci-lint`:
@@ -16,12 +20,17 @@ Next, install `eslint-plugin-dci-lint`:
 npm i -D eslint-plugin-dci-lint
 ```
 
+```sh
+pnpm i -D eslint-plugin-dci-lint
+```
+
 ## Configuration
 
-Add `dci-lint` and the typescript parser to your `.eslintrc` configuration file:
+Add the `dci-lint` plugin and the typescript parser to your `.eslintrc` configuration file:
 
 ```js
 module.exports = {
+  root: true,
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -29,7 +38,6 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
-  root: true,
   rules: {
     //"dci-lint/literal-role-contracts": "off"
   },
@@ -70,6 +78,16 @@ These rules are optional and are off as default.
 
 Please dive into [fulloo.info](https://fulloo.info/) and its extensive documentation. The [trygve manual](https://fulloo.info/Documents/trygve/trygve1.html) on that site is a worthwhile read for any programmer regardless of skill level.
 
+## VS Code snippets
+
+For VS Code, there are also some useful snippets in the [typescript.json](https://github.com/ciscoheat/eslint-plugin-dci-lint/blob/main/typescript.json) file in this repo. To use it:
+
+- Go to `File > Preferences > Configure User Snippets`
+- Choose TypeScript in the list
+- Paste the contents of the file there.
+
+You can now use the keywords "context", "role" and "rm" in `.ts` files to quickly generate Contexts, Roles and RoleMethods.
+
 ## Comments, ideas, issues
 
 Are best expressed as a Github issue [here](https://github.com/ciscoheat/eslint-plugin-dci-lint/issues)!
@@ -78,4 +96,4 @@ Are best expressed as a Github issue [here](https://github.com/ciscoheat/eslint-
 
 Thanks to the [Typescript ESLint project](https://typescript-eslint.io/) for making this possible at all!
 
-And as always, a big thanks to Trygve Reenskaug and James Coplien for inventing and continously improving on DCI over the years.
+And as always, a big thanks to Trygve Reenskaug for inventing and James Coplien for continously furthering DCI over the years.
