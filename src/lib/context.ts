@@ -9,8 +9,16 @@ import { RuleContext } from "@typescript-eslint/utils/ts-eslint";
 
 export type RoleMethodFunction =
   | TSESTree.FunctionDeclaration
-  | TSESTree.ArrowFunctionExpression;
-export type RoleKind = "const" | "let" | "var" | "param";
+  | TSESTree.ArrowFunctionExpression
+  | TSESTree.FunctionExpression;
+
+export type RoleKind =
+  | "const"
+  | "let"
+  | "var"
+  | "param"
+  | "using"
+  | "await using";
 
 export interface RoleMethodCall {
   role: string;

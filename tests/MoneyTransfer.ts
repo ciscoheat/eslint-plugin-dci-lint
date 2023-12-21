@@ -214,3 +214,41 @@ function HelloWorld(
 }
 
 HelloWorld({ phrase: "Hello, World!" }, console);
+
+/**
+ * @DCI-context
+ */
+export function ParentContext() {
+  const FirstRole = { name: "Test" };
+
+  function FirstRole_method() {
+    return FirstRole.name;
+  }
+
+  //console.log(FirstRole.name);
+
+  return {
+    // @DCI-context
+    nested(Person: { name: string }) {
+      function Person_method() {
+        //if(FirstRole.name) return '';
+        return FirstRole_method() + Person.name;
+      }
+
+      //console.log(Person.name);
+      return Person_method();
+    },
+
+    /**
+     * @DCI-context
+     */
+    nested2: (Person: { name: string }) => {
+      function Person_method() {
+        return FirstRole_method() + Person.name;
+      }
+
+      //console.log(Person.name)
+      return Person_method();
+    },
+  };
+}

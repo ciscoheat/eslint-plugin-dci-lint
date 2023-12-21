@@ -34,6 +34,8 @@ export const isContext = (func: RoleMethodFunction) =>
 export const isInContext = () => currentContext();
 export const isInRoleMethod = () => currentRoleMethod();
 
+const parsedComments = new Set<TSESTree.Comment>();
+
 const enterFunction = (
   func: RoleMethodFunction,
   context: GenericRuleContext
@@ -57,21 +59,26 @@ const enterFunction = (
   }
 
   if (!roleMethod) {
-    const source = context.getSourceCode();
+    const source = context.sourceCode;
 
-    const comments = currentCtx
-      ? source.getCommentsBefore(func)
-      : [func, ...context.getAncestors()]
-          .filter((n) => n.parent)
-          .flatMap((n) => source.getCommentsBefore(n));
+    const comments = [
+      func,
+      ...(source.getAncestors ? source.getAncestors(func) : []),
+    ]
+      .filter((n) => n.parent)
+      .flatMap((n) => source.getCommentsBefore(n))
+      .filter((c) => !parsedComments.has(c));
 
     const commentStr = comments.map((c) => c.value).join(" ");
     const hasContextComment = commentStr.match(isContextRegexp);
 
+    comments.forEach((c) => parsedComments.add(c));
+
     if (hasContextComment) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const name = func.id?.name ?? func.parent?.id?.name;
+      const name =
+        // @ts-expect-error Reflecting on type
+        func.id?.name ?? func.parent?.id?.name ?? func.parent?.key?.name;
+
       d("Entering Context " + name);
       _currentContext.push(new Context(context, name, func));
     }
@@ -99,10 +106,15 @@ export const contextRules = (
   rule: RuleListener
 ) => {
   rule[" FunctionDeclaration:exit"] = exitFunction;
+  rule[" FunctionExpression:exit"] = exitFunction;
   rule[" ArrowFunctionExpression:exit"] = exitFunction;
 
   rule[" FunctionDeclaration"] = (func: TSESTree.FunctionDeclaration) =>
     enterFunction(func, context);
+
+  rule[" FunctionExpression"] = (func: TSESTree.FunctionExpression) =>
+    enterFunction(func, context);
+
   rule[" ArrowFunctionExpression"] = (func: TSESTree.ArrowFunctionExpression) =>
     enterFunction(func, context);
 
