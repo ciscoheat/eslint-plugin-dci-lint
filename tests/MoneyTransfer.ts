@@ -231,7 +231,7 @@ export function ParentContext() {
     // @DCI-context
     nested(Person: { name: string }) {
       function Person_method() {
-        //if(FirstRole.name) return '';
+        //if (FirstRole.name) return "";
         return FirstRole_method() + Person.name;
       }
 
@@ -247,7 +247,7 @@ export function ParentContext() {
         return FirstRole_method() + Person.name;
       }
 
-      //console.log(Person.name)
+      //console.log(Person.name);
       return Person_method();
     },
   };

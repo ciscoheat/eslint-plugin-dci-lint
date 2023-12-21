@@ -3,6 +3,7 @@ import {
   contextRules,
   isInContext,
   isInRoleMethod,
+  parentContexts,
 } from "../DCIRuleHelpers";
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 
@@ -17,9 +18,17 @@ export default createRule({
         const dciContext = isInContext();
         if (!dciContext) return;
 
+        let isRole = false;
+        for (const context of [dciContext, ...parentContexts()]) {
+          if (context.roles.has(identifier.name)) {
+            isRole = true;
+            break;
+          }
+        }
+
         const currentRM = isInRoleMethod();
 
-        if (dciContext.roles.has(identifier.name)) {
+        if (isRole) {
           // Check for ROLE.member access
           if (!currentRM || currentRM.role != identifier.name) {
             if (identifier.parent == dciContext.func) {

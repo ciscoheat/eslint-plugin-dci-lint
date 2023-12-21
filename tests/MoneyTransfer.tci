@@ -1,15 +1,15 @@
 export const MoneyTransfer = {
   transfer() { 
-    SOURCE.withdraw()
+    Source.withdraw()
   }
 
-  AMOUNT: number
+  Amount: number
 
-  SOURCE: {
+  Source: {
     decreaseBalance(amount: number): void
 
     withdraw() {
-      SOURCE.decreaseBalance(AMOUNT)
+      Source.decreaseBalance(Amount)
       DESTINATION.deposit()
     }
   }
@@ -18,7 +18,7 @@ export const MoneyTransfer = {
     increaseBalance(amount: number): void
 
     deposit() {
-      DESTINATION.increaseBalance(AMOUNT)
+      DESTINATION.increaseBalance(Amount)
     }
   }
 }

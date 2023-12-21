@@ -33,6 +33,7 @@ export const isContext = (func: RoleMethodFunction) =>
 
 export const isInContext = () => currentContext();
 export const isInRoleMethod = () => currentRoleMethod();
+export const parentContexts = () => _currentContext.slice(0, -1);
 
 const parsedComments = new Set<TSESTree.Comment>();
 

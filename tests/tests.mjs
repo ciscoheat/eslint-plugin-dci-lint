@@ -60,7 +60,8 @@ try {
   ).replaceAll(/\/\/(\w)/g, "$1");
   fs.outputFileSync(failing, failingFile);
 
-  await test(failing, 22, 3);
+  // Adjust here as the test case grows
+  await test(failing, 26, 3);
 } finally {
   await fs.remove(failing);
 }
