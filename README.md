@@ -4,24 +4,14 @@ This is a **TypeScript** ESLint plugin that helps you adhere to DCI conventions.
 
 ## Installation
 
-You'll first need to install [typescript-eslint](https://typescript-eslint.io/) and its required packages:
+Use npm or pnpm to install the library [typescript-eslint](https://typescript-eslint.io/) and its required packages:
 
 ```sh
-npm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
+npm i -D eslint-plugin-dci-lint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
 ```
 
 ```sh
-pnpm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
-```
-
-Next, install `eslint-plugin-dci-lint`:
-
-```sh
-npm i -D eslint-plugin-dci-lint
-```
-
-```sh
-pnpm i -D eslint-plugin-dci-lint
+pnpm i -D eslint-plugin-dci-lint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
 ```
 
 ## Configuration
@@ -44,11 +34,11 @@ module.exports = {
 };
 ```
 
-## Running
+## Linting the code
 
 In the project directory, you can run ESLint with `npx eslint .` but while coding it's best to use it with a code editor, for example [VS Code](https://code.visualstudio.com/). This [extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
 
-## How to use / Tutorial
+## How to use / DCI Tutorial
 
 A comprehensive tutorial series is available at [https://blog.encodeart.dev/dci-tutorial-for-typescript-part-1](https://blog.encodeart.dev/dci-tutorial-for-typescript-part-1).
 
