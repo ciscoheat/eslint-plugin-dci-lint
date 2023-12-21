@@ -4,7 +4,7 @@ This is a **TypeScript** ESLint plugin that helps you adhere to DCI conventions.
 
 ## Installation
 
-Use npm or pnpm to install the library [typescript-eslint](https://typescript-eslint.io/) and its required packages:
+Use `npm` or `pnpm` to install the library and its required packages:
 
 ```sh
 npm i -D eslint-plugin-dci-lint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
