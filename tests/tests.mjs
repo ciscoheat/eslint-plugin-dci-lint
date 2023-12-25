@@ -2,6 +2,9 @@ import { exec as oExec } from "child_process";
 //import { stdout } from 'process'
 import fs from "fs-extra";
 
+const errorsWanted = 27;
+const warningsWanted = 3;
+
 const search =
   /✖ (?<problems>\d+) problems* \((?<errors>\d+) errors*, (?<warnings>\d+) warnings*\)/;
 
@@ -60,8 +63,7 @@ try {
   ).replaceAll(/\/\/(\w)/g, "$1");
   fs.outputFileSync(failing, failingFile);
 
-  // Adjust here as the test case grows
-  await test(failing, 26, 3);
+  await test(failing, errorsWanted, warningsWanted);
 } finally {
   await fs.remove(failing);
 }

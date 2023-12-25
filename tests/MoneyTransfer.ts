@@ -247,8 +247,15 @@ export function ParentContext() {
         return FirstRole_method() + Person.name;
       }
 
+      const FirstRole: { repeat: number } = { repeat: 10 };
+
+      function FirstRole_repeats() {
+        return FirstRole.repeat;
+      }
+
       //console.log(Person.name);
-      return Person_method();
+      //console.log(FirstRole.name);
+      return Person_method().repeat(FirstRole_repeats());
     },
   };
 }
