@@ -45,6 +45,10 @@ export default createRule({
             ) {
               // Check for passing the Roles to a function, that is allowed for
               // simplifying complicated Contexts
+            } else if (
+              identifier.parent?.type == AST_NODE_TYPES.TSTypeReference
+            ) {
+              // Check for accidental role names in type parameters
             } else {
               context.report({
                 node: identifier,

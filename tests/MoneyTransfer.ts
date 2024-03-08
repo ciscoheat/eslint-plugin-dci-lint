@@ -215,6 +215,34 @@ function HelloWorld(
 
 HelloWorld({ phrase: "Hello, World!" }, console);
 
+type Test = { name: string };
+
+/**
+ * @DCI-context
+ * Testing if type parameters give a false positive.
+ */
+function TypeParam(page: Array<Array<Test>>) {
+  //#region Test /////
+
+  // eslint-disable-next-line dci-lint/literal-role-contracts
+  const Test = page[0][0];
+
+  function Test_method() {
+    // Access Test here
+    Test.name;
+  }
+
+  //#endregion
+
+  return {
+    start: () => {
+      Test_method();
+    },
+  };
+}
+
+TypeParam([[{ name: "test" }]]);
+
 /**
  * @DCI-context
  */

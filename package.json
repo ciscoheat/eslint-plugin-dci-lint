@@ -28,19 +28,19 @@
     "@types/debug": "^4.1.12",
     "@types/esquery": "^1.5.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^18.19.3",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
-    "@typescript-eslint/utils": "^6.15.0",
+    "@types/node": "^18.19.22",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/utils": "^6.21.0",
     "debug": "^4.3.4",
-    "eslint": "^8.56.0",
-    "eslint-plugin-eslint-plugin": "^5.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-eslint-plugin": "^5.4.0",
     "eslint-plugin-node": "^11.1.0",
     "esquery": "^1.5.0",
     "fs-extra": "^11.2.0",
-    "mocha": "^10.2.0",
+    "mocha": "^10.3.0",
     "tsc-watch": "^6.0.4",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "engines": {
     "node": "^14.17.0 || ^16.0.0 || >= 18.0.0"
