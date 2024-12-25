@@ -4,39 +4,42 @@ This is a **TypeScript** ESLint plugin that helps you adhere to DCI conventions.
 
 ## Installation
 
-Use `npm` or `pnpm` to install the library and its required packages:
+**Note:** Version 0.9+ of the plugin uses ESLint 9 and ESM.
+
+Use `npm` or `pnpm` to install the plugin and its required packages:
 
 ```sh
-npm i -D eslint-plugin-dci-lint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
+npm i -D eslint @eslint/js typescript typescript-eslint eslint-plugin-dci-lint
 ```
 
 ```sh
-pnpm i -D eslint-plugin-dci-lint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint typescript
+pnpm i -D eslint @eslint/js typescript typescript-eslint eslint-plugin-dci-lint
 ```
 
 ## Configuration
 
-Add the `dci-lint` plugin and the typescript parser to your `.eslintrc` configuration file:
+Add the `dci-lint` plugin and the typescript parser to your `eslint.config.js` configuration file:
 
 ```js
-module.exports = {
-  root: true,
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:dci-lint/recommended",
-  ],
-  parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
-  rules: {
-    //"dci-lint/literal-role-contracts": "off"
-  },
-};
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import dciLint from "eslint-plugin-dci-lint";
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  dciLint.configs.recommended,
+  {
+    rules: {
+      //"dci-lint/literal-role-contracts": "off"
+    },
+  }
+);
 ```
 
 ## Linting the code
 
-In the project directory, you can run ESLint with `npx eslint .` but while coding it's best to use it with a code editor, for example [VS Code](https://code.visualstudio.com/). This [extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
+In the project directory, you can run ESLint with `npx eslint .` but while coding it's best to use it with a code editor. This [VS Code extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) gives you linting as you type (or search for ESLint in the extensions panel).
 
 ## How to use / DCI Tutorial
 
@@ -120,4 +123,4 @@ Are best expressed as a Github issue [here](https://github.com/ciscoheat/eslint-
 
 Thanks to the [Typescript ESLint project](https://typescript-eslint.io/) for making this possible at all!
 
-And as always, a big thanks to Trygve Reenskaug for inventing and James Coplien for continously furthering DCI over the years.
+And as always, a big thanks to the late Trygve Reenskaug for inventing DCI, and James Coplien for continously furthering it over the years.
