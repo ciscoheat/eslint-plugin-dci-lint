@@ -4,7 +4,7 @@ import {
   isInContext,
   isInRoleMethod,
   parentContexts,
-} from "../DCIRuleHelpers";
+} from "../DCIRuleHelpers.js";
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 
 //import debug from "../debug";
@@ -78,7 +78,7 @@ export default createRule({
   meta: {
     docs: {
       description: "The Role can only be accessed through its own RoleMethods.",
-      recommended: "strict",
+      recommended: true,
     },
     messages: {
       privateCall: "Accessing a private RoleMethod outside its Role.",

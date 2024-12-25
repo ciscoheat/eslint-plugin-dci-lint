@@ -1,4 +1,6 @@
-import { createRule, contextRules, isInContext } from "../DCIRuleHelpers";
+import { createRule, contextRules, isInContext } from "../DCIRuleHelpers.js";
+
+const description = `"this" should not be used inside a Context, as it can be confusing what it refers to.`;
 
 export default createRule({
   name: "no-this-in-context",
@@ -15,11 +17,11 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: `"this" should not be used inside a Context.`,
-      recommended: "recommended",
+      description,
+      recommended: true,
     },
     messages: {
-      noThis: `"this" should not be used inside a Context.`,
+      noThis: description,
     },
     type: "problem",
     schema: [],

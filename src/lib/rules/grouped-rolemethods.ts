@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
-import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
-import { Context, Role, RoleMethod } from "../context";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers.js";
+import { Context, Role, RoleMethod } from "../context.js";
 
 //import debug from "../debug";
 //const d = debug("grouped-rolemethods");
@@ -69,7 +69,7 @@ export default createRule({
               loc: otherCodeUsed,
             });
           } else if ("role" in code) {
-            const roleName = code.role?.name as string;
+            const roleName = code.role?.name;
             // A Role declaration, so all RoleMethods belonging to this role must come after.
             if (usedRoles.has(roleName)) {
               context.report({
@@ -109,7 +109,7 @@ export default createRule({
     docs: {
       description:
         "RoleMethods must come after one another, they cannot be mixed with other code in the Context.",
-      recommended: "recommended",
+      recommended: true,
     },
     messages: {
       unordered:

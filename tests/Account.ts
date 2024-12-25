@@ -19,7 +19,7 @@ export class Account {
     return (
       `${this.name}: ` +
       "[" +
-      this.ledgers +
+      this.ledgers.join(", ") +
       "] -> " +
       this.ledgers.reduce((prev, curr) => prev + curr)
     );
