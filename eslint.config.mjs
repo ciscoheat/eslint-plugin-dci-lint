@@ -6,7 +6,7 @@ import dciLint from "./lib/index.js";
 export default tseslint.config(
   {
     // Project service ignores
-    ignores: ["eslint.config.mjs", "**/*.js"],
+    ignores: ["eslint.config.mjs", "**/*.js", "tests/tests.mjs"],
   },
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -17,7 +17,7 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ["tests/*.ts", "tests/tests.mjs"],
+          allowDefaultProject: ["tests/*.ts"],
         },
         tsconfigRootDir: import.meta.dirname,
       },

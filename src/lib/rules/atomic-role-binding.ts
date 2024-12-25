@@ -21,7 +21,7 @@ export default createRule({
               ? s.expression.left
               : null;
           })
-          .filter((s) => !!s) as TSESTree.Identifier[];
+          .filter((s) => !!s);
 
         // Filter out duplicates
         const assignmentMap = new Map(assignments.map((a) => [a.name, a]));
@@ -58,7 +58,7 @@ export default createRule({
     },
     messages: {
       tooFew: `All Roles must be bound (reassigned) in the same function. Missing: {{missing}}`,
-      alreadyDeclared: `Roles are already bound elsewhere in the Context`,
+      //alreadyDeclared: `Roles are already bound elsewhere in the Context`,
     },
     type: "problem",
     schema: [],

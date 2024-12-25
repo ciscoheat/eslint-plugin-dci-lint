@@ -185,7 +185,6 @@ export class Context {
       if (!this.roles.has(rm.role)) {
         // Check if a potential role exist, if so, add the Role.
         if (potentialRoles.has(rm.role)) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const role = potentialRoles.get(rm.role)!;
           this.roles.set(rm.role, { ...role, methods: [contextRm] });
         } else {
@@ -220,6 +219,6 @@ export class Context {
       isPrivate ? privateRoleSplitter : publicRoleSplitter
     );
 
-    return { role: parts[0] as string, method: parts[1] as string, isPrivate };
+    return { role: parts[0], method: parts[1], isPrivate };
   }
 }

@@ -83,8 +83,11 @@ const enterFunction = (
     comments.forEach((c) => parsedComments.add(c));
 
     if (hasContextComment) {
-      const name =
+      // Too many type checks, disabling linter instead.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const name: string =
         // @ts-expect-error Reflecting on type
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         func.id?.name ?? func.parent?.id?.name ?? func.parent?.key?.name;
 
       d("Entering Context " + name);

@@ -15,7 +15,9 @@ import sortedRoleMethods from "./rules/sorted-rolemethods.js";
 
 const pkg = JSON.parse(
   fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")
-);
+) as Record<string, unknown>;
+
+if (!pkg || !pkg.version) throw new Error("Missing version in package.json");
 
 const pluginName = "dci-lint";
 

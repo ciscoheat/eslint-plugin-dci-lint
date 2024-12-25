@@ -69,7 +69,7 @@ export default createRule({
               loc: otherCodeUsed,
             });
           } else if ("role" in code) {
-            const roleName = code.role?.name as string;
+            const roleName = code.role?.name;
             // A Role declaration, so all RoleMethods belonging to this role must come after.
             if (usedRoles.has(roleName)) {
               context.report({

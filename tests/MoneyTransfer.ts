@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 /**
  * This is a file that tests the linter.
  * All comments with no space between // and the end of the line will be
@@ -10,7 +12,7 @@ a;
 /**
  * @DCI-context
  */
-export async function MoneyTransfer(
+export function MoneyTransfer(
   Source: {
     name: string;
     decreaseBalance(amount: number): void;
