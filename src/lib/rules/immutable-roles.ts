@@ -4,7 +4,7 @@ import {
   contextRules,
   isContext,
   isInContext,
-} from "../DCIRuleHelpers";
+} from "../DCIRuleHelpers.js";
 
 export default createRule({
   name: "immutable-roles",

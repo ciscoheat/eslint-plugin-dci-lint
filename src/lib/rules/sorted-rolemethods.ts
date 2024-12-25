@@ -1,5 +1,5 @@
-import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
-import { Context, RoleMethodFunction } from "../context";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers.js";
+import { Context, RoleMethodFunction } from "../context.js";
 import { AST_NODE_TYPES } from "@typescript-eslint/utils";
 
 export default createRule({
@@ -48,7 +48,7 @@ export default createRule({
   meta: {
     docs: {
       description: "RoleMethods should be sorted alphabetically.",
-      recommended: "stylistic",
+      recommended: false,
     },
     messages: {
       unsorted: "RoleMethods should be sorted alphabetically.",

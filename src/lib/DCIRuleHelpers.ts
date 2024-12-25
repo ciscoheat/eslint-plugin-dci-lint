@@ -1,13 +1,20 @@
 import { ESLintUtils, TSESTree } from "@typescript-eslint/utils";
-import { Context, GenericRuleContext, RoleMethodFunction } from "./context";
-import type { RoleMethod } from "./context";
-import debug from "./debug";
+import { Context, GenericRuleContext, RoleMethodFunction } from "./context.js";
+import type { RoleMethod } from "./context.js";
+import debug from "./debug.js";
 import { RuleListener } from "@typescript-eslint/utils/ts-eslint";
 
 const d = debug("rules");
 
-export const createRule = ESLintUtils.RuleCreator(
-  (name) => `https://example.com/rule/${name}`
+export interface ExampleTypedLintingRuleDocs {
+  description: string;
+  recommended?: boolean;
+  requiresTypeChecking?: boolean;
+}
+
+export const createRule = ESLintUtils.RuleCreator<ExampleTypedLintingRuleDocs>(
+  (name) =>
+    `https://github.com/ciscoheat/eslint-plugin-dci-lint?tab=readme-ov-file#${name}`
 );
 
 // TODO: Role name checking rule

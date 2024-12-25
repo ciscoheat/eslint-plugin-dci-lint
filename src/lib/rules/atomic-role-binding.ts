@@ -1,5 +1,5 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
-import { createRule, contextRules, isInContext } from "../DCIRuleHelpers";
+import { createRule, contextRules, isInContext } from "../DCIRuleHelpers.js";
 
 export default createRule({
   name: "atomic-role-binding",
@@ -54,7 +54,7 @@ export default createRule({
   meta: {
     docs: {
       description: "All Roles must be bound (reassigned) in the same function.",
-      recommended: "strict",
+      recommended: true,
     },
     messages: {
       tooFew: `All Roles must be bound (reassigned) in the same function. Missing: {{missing}}`,

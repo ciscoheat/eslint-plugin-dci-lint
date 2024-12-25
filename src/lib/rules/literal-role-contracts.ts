@@ -1,8 +1,9 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
-import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers.js";
 
 const description =
-  "Role contracts should be defined using an object type, Iterable or primitive type. More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
+  "Role contracts should be defined using an object type, Iterable or primitive type. " +
+  "More info: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#object-types";
 
 const allowedLiteralTypes = new Set([
   AST_NODE_TYPES.TSTypeLiteral,
@@ -17,7 +18,7 @@ const allowedExpressionTypes = new Set([
   AST_NODE_TYPES.ObjectExpression,
 ]);
 
-const allowedTypeParameters = new Set([
+const allowedTypeArguments = new Set([
   "Iterable",
   "Array",
   "Map",
@@ -37,11 +38,11 @@ const checkTypeNode = (
   } else if (
     contractType.type == AST_NODE_TYPES.TSTypeReference &&
     contractType.typeName.type == AST_NODE_TYPES.Identifier &&
-    allowedTypeParameters.has(contractType.typeName.name) &&
-    contractType.typeParameters?.params &&
-    contractType.typeParameters?.params.length > 0
+    allowedTypeArguments.has(contractType.typeName.name) &&
+    contractType.typeArguments?.params &&
+    contractType.typeArguments?.params.length > 0
   ) {
-    return contractType.typeParameters.params.flatMap(checkTypeNode);
+    return contractType.typeArguments.params.flatMap(checkTypeNode);
   } else {
     return [contractType];
   }
@@ -99,7 +100,7 @@ export default createRule({
   meta: {
     docs: {
       description,
-      recommended: "recommended",
+      recommended: true,
     },
     messages: {
       literal: description,

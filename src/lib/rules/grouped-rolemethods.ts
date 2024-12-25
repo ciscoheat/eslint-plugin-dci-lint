@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
-import { createRule, contextRules, isContext } from "../DCIRuleHelpers";
-import { Context, Role, RoleMethod } from "../context";
+import { createRule, contextRules, isContext } from "../DCIRuleHelpers.js";
+import { Context, Role, RoleMethod } from "../context.js";
 
 //import debug from "../debug";
 //const d = debug("grouped-rolemethods");
@@ -109,7 +109,7 @@ export default createRule({
     docs: {
       description:
         "RoleMethods must come after one another, they cannot be mixed with other code in the Context.",
-      recommended: "recommended",
+      recommended: true,
     },
     messages: {
       unordered:

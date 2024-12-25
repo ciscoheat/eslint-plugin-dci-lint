@@ -14,6 +14,7 @@
     "typescript",
     "dci"
   ],
+  "type": "module",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
   "scripts": {
@@ -24,13 +25,13 @@
     "test": "node tests/tests.mjs"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
     "@tsconfig/node18": "^18.2.4",
     "@types/debug": "^4.1.12",
     "@types/esquery": "^1.5.4",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.18.2",
-    "@typescript-eslint/parser": "^8.18.2",
     "@typescript-eslint/utils": "^8.18.2",
     "debug": "^4.4.0",
     "eslint": "^9.17.0",
@@ -38,15 +39,16 @@
     "eslint-plugin-node": "^11.1.0",
     "esquery": "^1.6.0",
     "fs-extra": "^11.2.0",
+    "globals": "^15.14.0",
     "mocha": "^11.0.1",
     "tsc-watch": "^6.2.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2"
   },
   "engines": {
     "node": "^14.17.0 || ^16.0.0 || >= 18.0.0"
   },
   "peerDependencies": {
-    "@typescript-eslint/parser": "^8.18.2",
     "eslint": ">=9",
     "typescript": "^5.7.2"
   },
