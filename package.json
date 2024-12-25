@@ -24,29 +24,31 @@
     "test": "node tests/tests.mjs"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.2",
+    "@tsconfig/node18": "^18.2.4",
     "@types/debug": "^4.1.12",
-    "@types/esquery": "^1.5.3",
+    "@types/esquery": "^1.5.4",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^18.19.22",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "@typescript-eslint/utils": "^6.21.0",
-    "debug": "^4.3.4",
-    "eslint": "^8.57.0",
-    "eslint-plugin-eslint-plugin": "^5.4.0",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "@typescript-eslint/utils": "^8.18.2",
+    "debug": "^4.4.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-eslint-plugin": "^6.4.0",
     "eslint-plugin-node": "^11.1.0",
-    "esquery": "^1.5.0",
+    "esquery": "^1.6.0",
     "fs-extra": "^11.2.0",
-    "mocha": "^10.3.0",
-    "tsc-watch": "^6.0.4",
-    "typescript": "^5.4.2"
+    "mocha": "^11.0.1",
+    "tsc-watch": "^6.2.1",
+    "typescript": "^5.7.2"
   },
   "engines": {
     "node": "^14.17.0 || ^16.0.0 || >= 18.0.0"
   },
   "peerDependencies": {
-    "eslint": ">=7"
+    "@typescript-eslint/parser": "^8.18.2",
+    "eslint": ">=9",
+    "typescript": "^5.7.2"
   },
   "license": "MIT"
 }
