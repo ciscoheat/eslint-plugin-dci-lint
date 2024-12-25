@@ -30,9 +30,14 @@ async function test(file, errorsWanted = 0, warningsWanted = 0) {
 
     if (parsed.input.includes("Parsing error:")) throw new Error(parsed.input);
 
+    const errors = parseInt(parsed.groups.errors) ?? 1000;
+    const warnings = parseInt(parsed.groups.warnings) ?? 1000;
+
+    //if (errors) console.log(stdout);
+
     result = {
-      errors: parseInt(parsed.groups.errors) ?? 1000,
-      warnings: parseInt(parsed.groups.warnings) ?? 1000,
+      errors,
+      warnings,
     };
   }
 
@@ -60,7 +65,7 @@ try {
 
   const failingFile = (
     await fs.readFile(file, { encoding: "utf-8" })
-  ).replaceAll(/\/\/(\w)/g, "$1");
+  ).replaceAll(/\/\/([\w\/])/g, "$1");
   fs.outputFileSync(failing, failingFile);
 
   await test(failing, errorsWanted, warningsWanted);

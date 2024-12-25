@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 
+// Failing test checks
+///* eslint-disable @typescript-eslint/no-unsafe-call */
+///* eslint-disable @typescript-eslint/no-unsafe-member-access */
+///* eslint-disable @typescript-eslint/unbound-method */
+
 /**
  * This is a file that tests the linter.
  * All comments with no space between // and the end of the line will be
@@ -181,10 +186,10 @@ export function MoneyTransfer(
     //dest2: DESTINATION.increaseBalance,
   };
 
-  passRoleOn(DESTINATION); //OK
-  passRoleOn(DESTINATION, output); //OK
-  //passRoleOn(DESTINATION.increaseBalance, 123); //NO
-  //passRoleOn(DESTINATION.increaseBalance(123)); //NO
+  passRoleOn(DESTINATION); // OK
+  passRoleOn(DESTINATION, output); // OK
+  //passRoleOn(DESTINATION.increaseBalance, 123); // NO
+  //passRoleOn(DESTINATION.increaseBalance(123)); // NO
 
   //SOURCE.decreaseBalance(100);
   //SOURCE__confirm();
