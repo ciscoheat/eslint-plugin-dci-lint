@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-dci-lint",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Andreas Söderlund <ciscoheat@gmail.com> (https://blog.encodeart.dev)",
   "description": "A Typescript ESLint plugin that helps you adhere to DCI conventions.",
   "repository": {
@@ -50,7 +50,7 @@
   },
   "peerDependencies": {
     "eslint": ">=9",
-    "typescript": "^5.7.2"
+    "typescript": "^5.0.0"
   },
   "license": "MIT"
 }
