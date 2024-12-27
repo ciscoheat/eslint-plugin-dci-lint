@@ -127,7 +127,9 @@ export function MoneyTransfer(
   //console.log("in between different roles");
 
   //let DESTINATION_deposit2 = () => { /**/ };
+  //DESTINATION_deposit2();
   //const TEST_noRole = () => { /* */ };
+  //TEST_noRole();
 
   const Multiple: { test: number } = { test: 123 },
     Multiple_output = () => console.log(Multiple.test),
@@ -167,13 +169,14 @@ export function MoneyTransfer(
       name: "DEF",
       decreaseBalance: (amount: number) => amount,
     };
-    //Multiple = {test: 234}
     Iter = [];
 
     NullRole = { name: "notnull" };
   };
 
-  //function rebind2() { NEWAMOUNT = { confirm2: () => { /**/ }, }; }
+  // prettier-ignore
+  //function rebind2() { NEWAMOUNT = { confirm2: () => { /**/ }, amount: 0 }; }
+  //rebind2();
 
   function _underscore() {
     return 123;
@@ -191,8 +194,8 @@ export function MoneyTransfer(
   //passRoleOn(DESTINATION.increaseBalance, 123); // NO
   //passRoleOn(DESTINATION.increaseBalance(123)); // NO
 
-  //SOURCE.decreaseBalance(100);
-  //SOURCE__confirm();
+  //Source.decreaseBalance(100);
+  //Source__confirm();
   Source_withdraw();
 
   return {
@@ -289,7 +292,7 @@ export function ParentContext() {
       }
 
       //console.log(Person.name);
-      //console.log(FirstRole.name);
+      //console.log(FirstRole.repeat);
       return Person_method().repeat(FirstRole_repeats());
     },
   };

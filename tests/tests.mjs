@@ -2,8 +2,8 @@ import { exec as oExec } from "child_process";
 //import { stdout } from 'process'
 import fs from "fs-extra";
 
-const errorsWanted = 27;
-const warningsWanted = 3;
+const errorsWanted = 29;
+const warningsWanted = 0;
 
 const search =
   /✖ (?<problems>\d+) problems* \((?<errors>\d+) errors*, (?<warnings>\d+) warnings*\)/;
@@ -26,7 +26,10 @@ async function test(file, errorsWanted = 0, warningsWanted = 0) {
 
   if (stdout.trim().length != 0) {
     const parsed = search.exec(stdout);
-    if (!parsed.groups) throw new Error("No result found in eslint output");
+    if (!parsed || !parsed.groups) {
+      console.log(stdout);
+      throw new Error("No result found in eslint output");
+    }
 
     if (parsed.input.includes("Parsing error:")) throw new Error(parsed.input);
 

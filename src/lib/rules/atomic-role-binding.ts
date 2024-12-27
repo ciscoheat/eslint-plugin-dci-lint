@@ -1,9 +1,14 @@
 import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { createRule, contextRules, isInContext } from "../DCIRuleHelpers.js";
+import { Context } from "../context.js";
+
+const errorMessage =
+  "All Roles must be bound (reassigned) in only one function per Context.";
 
 export default createRule({
   name: "atomic-role-binding",
   create(context) {
+    const bindings = new Map<Context, TSESTree.BlockStatement>();
     return contextRules(context, {
       BlockStatement(node: TSESTree.BlockStatement) {
         const dciContext = isInContext();
@@ -26,26 +31,15 @@ export default createRule({
         // Filter out duplicates
         const assignmentMap = new Map(assignments.map((a) => [a.name, a]));
 
-        // Check if all assignments are made in the same block.
-        const allRoles = new Set(
-          Array.from(dciContext.roles.entries())
-            .filter(([, roleId]) => roleId.kind != "const")
-            .map(([role]) => role)
-        );
-
         if (assignmentMap.size > 0) {
-          if (assignmentMap.size < allRoles.size) {
+          //console.log(dciContext.name, assignmentMap.keys());
+          if (bindings.get(dciContext)) {
             context.report({
               loc: node.loc,
-              messageId: "tooFew",
-              data: {
-                missing: Array.from(allRoles.values())
-                  .filter((r) => !assignments.find((a) => a.name == r))
-                  .join(","),
-              },
+              messageId: "alreadyDeclared",
             });
           } else {
-            // Binding ok!
+            bindings.set(dciContext, node);
           }
         }
       },
@@ -53,12 +47,11 @@ export default createRule({
   },
   meta: {
     docs: {
-      description: "All Roles must be bound (reassigned) in the same function.",
+      description: errorMessage,
       recommended: true,
     },
     messages: {
-      tooFew: `All Roles must be bound (reassigned) in the same function. Missing: {{missing}}`,
-      //alreadyDeclared: `Roles are already bound elsewhere in the Context`,
+      alreadyDeclared: errorMessage,
     },
     type: "problem",
     schema: [],
