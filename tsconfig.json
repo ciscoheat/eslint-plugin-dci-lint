@@ -3,7 +3,9 @@
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "rootDir": "src/lib",
     "outDir": "lib",
+    "types": ["node"],
     "sourceMap": true
   }
 }
