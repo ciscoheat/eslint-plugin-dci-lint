@@ -65,7 +65,7 @@ export class Context {
   constructor(
     context: GenericRuleContext,
     name: string,
-    func: RoleMethodFunction
+    func: RoleMethodFunction,
   ) {
     this.name = name;
     this.func = func;
@@ -86,7 +86,7 @@ export class Context {
         potentialRoles.set(p.name, {
           name: p.name,
           id: p,
-          kind: "param" as RoleKind,
+          kind: "param",
           contract: p.typeAnnotation,
         });
       } else if (
@@ -96,7 +96,7 @@ export class Context {
         potentialRoles.set(p.left.name, {
           name: p.left.name,
           id: p.left,
-          kind: "param" as RoleKind,
+          kind: "param",
           contract: p.left.typeAnnotation ?? p.right,
         });
       }
@@ -216,7 +216,7 @@ export class Context {
 
     const isPrivate = name.includes(privateRoleSplitter);
     const parts = name.split(
-      isPrivate ? privateRoleSplitter : publicRoleSplitter
+      isPrivate ? privateRoleSplitter : publicRoleSplitter,
     );
 
     return { role: parts[0], method: parts[1], isPrivate };
